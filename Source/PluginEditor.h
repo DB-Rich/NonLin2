@@ -29,5 +29,11 @@ private:
     // access the processor object that created it.
     NonLinAudioProcessor& audioProcessor;
 
+    //juce::Array<juce::Slider> param; // does not work - would want juce Owned Array
+
+    juce::Slider paramA1;
+    juce::Slider paramA2;
+    juce::Slider paramA3;
+
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (NonLinAudioProcessorEditor)
 };

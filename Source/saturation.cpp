@@ -382,7 +382,7 @@
         FX->filter[blockId].prepare(FX->procSpec[blockId]);
         FX->filter[blockId].setType(FX->filterType[blockId]);
         FX->filter[blockId].setCutoffFrequency(FX->blockSettings[blockId][f_frequency]);
-       // FX->filter[blockId].reset();
+       // FX->filter[blockId].reset(); // debug xheck order required
     }
 
     //called from init()
