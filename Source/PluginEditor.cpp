@@ -162,6 +162,9 @@ NonLinAudioProcessorEditor::NonLinAudioProcessorEditor (NonLinAudioProcessor& p)
     slot7.setSize(90, 30);
     slot8.setSize(90, 30);
 
+    addAndMakeVisible(&oversample);
+    oversample.setSize(90, 30);
+
     addAndMakeVisible(&U1Amin);
     addAndMakeVisible(&U1Amax);
     addAndMakeVisible(&U2Amin);
@@ -227,13 +230,205 @@ NonLinAudioProcessorEditor::NonLinAudioProcessorEditor (NonLinAudioProcessor& p)
     U3Bmax.setSliderStyle(juce::Slider::RotaryVerticalDrag);
     U4Bmin.setSliderStyle(juce::Slider::RotaryVerticalDrag);
     U4Bmax.setSliderStyle(juce::Slider::RotaryVerticalDrag);
-    
-    
-    //FAIL:
-   // param.resize(1);
-    //param[0].setSize(widgetSize, widgetSize);
-    //param[0].setSliderStyle(juce::Slider::RotaryVerticalDrag);
-    //param[0].setTextBoxStyle(noTextBox);   
+
+    addAndMakeVisible(&U1Cmin);
+    addAndMakeVisible(&U1Cmax);
+    addAndMakeVisible(&U2Cmin);
+    addAndMakeVisible(&U2Cmax);
+    addAndMakeVisible(&U3Cmin);
+    addAndMakeVisible(&U3Cmax);
+    addAndMakeVisible(&U4Cmin);
+    addAndMakeVisible(&U4Cmax);
+    U1Cmin.setSize(smallWidgetSize, smallWidgetSize);
+    U1Cmax.setSize(smallWidgetSize, smallWidgetSize);
+    U2Cmin.setSize(smallWidgetSize, smallWidgetSize);
+    U2Cmax.setSize(smallWidgetSize, smallWidgetSize);
+    U3Cmin.setSize(smallWidgetSize, smallWidgetSize);
+    U3Cmax.setSize(smallWidgetSize, smallWidgetSize);
+    U4Cmin.setSize(smallWidgetSize, smallWidgetSize);
+    U4Cmax.setSize(smallWidgetSize, smallWidgetSize);
+    U1Cmin.setTextBoxStyle(noTextBox);
+    U1Cmax.setTextBoxStyle(noTextBox);
+    U2Cmin.setTextBoxStyle(noTextBox);
+    U2Cmax.setTextBoxStyle(noTextBox);
+    U3Cmin.setTextBoxStyle(noTextBox);
+    U3Cmax.setTextBoxStyle(noTextBox);
+    U4Cmin.setTextBoxStyle(noTextBox);
+    U4Cmax.setTextBoxStyle(noTextBox);
+    U1Cmin.setSliderStyle(juce::Slider::RotaryVerticalDrag);
+    U1Cmax.setSliderStyle(juce::Slider::RotaryVerticalDrag);
+    U2Cmin.setSliderStyle(juce::Slider::RotaryVerticalDrag);
+    U2Cmax.setSliderStyle(juce::Slider::RotaryVerticalDrag);
+    U3Cmin.setSliderStyle(juce::Slider::RotaryVerticalDrag);
+    U3Cmax.setSliderStyle(juce::Slider::RotaryVerticalDrag);
+    U4Cmin.setSliderStyle(juce::Slider::RotaryVerticalDrag);
+    U4Cmax.setSliderStyle(juce::Slider::RotaryVerticalDrag);
+
+    addAndMakeVisible(&U1Dmin);
+    addAndMakeVisible(&U1Dmax);
+    addAndMakeVisible(&U2Dmin);
+    addAndMakeVisible(&U2Dmax);
+    addAndMakeVisible(&U3Dmin);
+    addAndMakeVisible(&U3Dmax);
+    addAndMakeVisible(&U4Dmin);
+    addAndMakeVisible(&U4Dmax);
+    U1Dmin.setSize(smallWidgetSize, smallWidgetSize);
+    U1Dmax.setSize(smallWidgetSize, smallWidgetSize);
+    U2Dmin.setSize(smallWidgetSize, smallWidgetSize);
+    U2Dmax.setSize(smallWidgetSize, smallWidgetSize);
+    U3Dmin.setSize(smallWidgetSize, smallWidgetSize);
+    U3Dmax.setSize(smallWidgetSize, smallWidgetSize);
+    U4Dmin.setSize(smallWidgetSize, smallWidgetSize);
+    U4Dmax.setSize(smallWidgetSize, smallWidgetSize);
+    U1Dmin.setTextBoxStyle(noTextBox);
+    U1Dmax.setTextBoxStyle(noTextBox);
+    U2Dmin.setTextBoxStyle(noTextBox);
+    U2Dmax.setTextBoxStyle(noTextBox);
+    U3Dmin.setTextBoxStyle(noTextBox);
+    U3Dmax.setTextBoxStyle(noTextBox);
+    U4Dmin.setTextBoxStyle(noTextBox);
+    U4Dmax.setTextBoxStyle(noTextBox);
+    U1Dmin.setSliderStyle(juce::Slider::RotaryVerticalDrag);
+    U1Dmax.setSliderStyle(juce::Slider::RotaryVerticalDrag);
+    U2Dmin.setSliderStyle(juce::Slider::RotaryVerticalDrag);
+    U2Dmax.setSliderStyle(juce::Slider::RotaryVerticalDrag);
+    U3Dmin.setSliderStyle(juce::Slider::RotaryVerticalDrag);
+    U3Dmax.setSliderStyle(juce::Slider::RotaryVerticalDrag);
+    U4Dmin.setSliderStyle(juce::Slider::RotaryVerticalDrag);
+    U4Dmax.setSliderStyle(juce::Slider::RotaryVerticalDrag);
+
+    addAndMakeVisible(&U1Emin);
+    addAndMakeVisible(&U1Emax);
+    addAndMakeVisible(&U2Emin);
+    addAndMakeVisible(&U2Emax);
+    addAndMakeVisible(&U3Emin);
+    addAndMakeVisible(&U3Emax);
+    addAndMakeVisible(&U4Emin);
+    addAndMakeVisible(&U4Emax);
+    U1Emin.setSize(smallWidgetSize, smallWidgetSize);
+    U1Emax.setSize(smallWidgetSize, smallWidgetSize);
+    U2Emin.setSize(smallWidgetSize, smallWidgetSize);
+    U2Emax.setSize(smallWidgetSize, smallWidgetSize);
+    U3Emin.setSize(smallWidgetSize, smallWidgetSize);
+    U3Emax.setSize(smallWidgetSize, smallWidgetSize);
+    U4Emin.setSize(smallWidgetSize, smallWidgetSize);
+    U4Emax.setSize(smallWidgetSize, smallWidgetSize);
+    U1Emin.setTextBoxStyle(noTextBox);
+    U1Emax.setTextBoxStyle(noTextBox);
+    U2Emin.setTextBoxStyle(noTextBox);
+    U2Emax.setTextBoxStyle(noTextBox);
+    U3Emin.setTextBoxStyle(noTextBox);
+    U3Emax.setTextBoxStyle(noTextBox);
+    U4Emin.setTextBoxStyle(noTextBox);
+    U4Emax.setTextBoxStyle(noTextBox);
+    U1Emin.setSliderStyle(juce::Slider::RotaryVerticalDrag);
+    U1Emax.setSliderStyle(juce::Slider::RotaryVerticalDrag);
+    U2Emin.setSliderStyle(juce::Slider::RotaryVerticalDrag);
+    U2Emax.setSliderStyle(juce::Slider::RotaryVerticalDrag);
+    U3Emin.setSliderStyle(juce::Slider::RotaryVerticalDrag);
+    U3Emax.setSliderStyle(juce::Slider::RotaryVerticalDrag);
+    U4Emin.setSliderStyle(juce::Slider::RotaryVerticalDrag);
+    U4Emax.setSliderStyle(juce::Slider::RotaryVerticalDrag);
+
+    addAndMakeVisible(&U1Fmin);
+    addAndMakeVisible(&U1Fmax);
+    addAndMakeVisible(&U2Fmin);
+    addAndMakeVisible(&U2Fmax);
+    addAndMakeVisible(&U3Fmin);
+    addAndMakeVisible(&U3Fmax);
+    addAndMakeVisible(&U4Fmin);
+    addAndMakeVisible(&U4Fmax);
+    U1Fmin.setSize(smallWidgetSize, smallWidgetSize);
+    U1Fmax.setSize(smallWidgetSize, smallWidgetSize);
+    U2Fmin.setSize(smallWidgetSize, smallWidgetSize);
+    U2Fmax.setSize(smallWidgetSize, smallWidgetSize);
+    U3Fmin.setSize(smallWidgetSize, smallWidgetSize);
+    U3Fmax.setSize(smallWidgetSize, smallWidgetSize);
+    U4Fmin.setSize(smallWidgetSize, smallWidgetSize);
+    U4Fmax.setSize(smallWidgetSize, smallWidgetSize);
+    U1Fmin.setTextBoxStyle(noTextBox);
+    U1Fmax.setTextBoxStyle(noTextBox);
+    U2Fmin.setTextBoxStyle(noTextBox);
+    U2Fmax.setTextBoxStyle(noTextBox);
+    U3Fmin.setTextBoxStyle(noTextBox);
+    U3Fmax.setTextBoxStyle(noTextBox);
+    U4Fmin.setTextBoxStyle(noTextBox);
+    U4Fmax.setTextBoxStyle(noTextBox);
+    U1Fmin.setSliderStyle(juce::Slider::RotaryVerticalDrag);
+    U1Fmax.setSliderStyle(juce::Slider::RotaryVerticalDrag);
+    U2Fmin.setSliderStyle(juce::Slider::RotaryVerticalDrag);
+    U2Fmax.setSliderStyle(juce::Slider::RotaryVerticalDrag);
+    U3Fmin.setSliderStyle(juce::Slider::RotaryVerticalDrag);
+    U3Fmax.setSliderStyle(juce::Slider::RotaryVerticalDrag);
+    U4Fmin.setSliderStyle(juce::Slider::RotaryVerticalDrag);
+    U4Fmax.setSliderStyle(juce::Slider::RotaryVerticalDrag);
+
+    addAndMakeVisible(&U1Gmin);
+    addAndMakeVisible(&U1Gmax);
+    addAndMakeVisible(&U2Gmin);
+    addAndMakeVisible(&U2Gmax);
+    addAndMakeVisible(&U3Gmin);
+    addAndMakeVisible(&U3Gmax);
+    addAndMakeVisible(&U4Gmin);
+    addAndMakeVisible(&U4Gmax);
+    U1Gmin.setSize(smallWidgetSize, smallWidgetSize);
+    U1Gmax.setSize(smallWidgetSize, smallWidgetSize);
+    U2Gmin.setSize(smallWidgetSize, smallWidgetSize);
+    U2Gmax.setSize(smallWidgetSize, smallWidgetSize);
+    U3Gmin.setSize(smallWidgetSize, smallWidgetSize);
+    U3Gmax.setSize(smallWidgetSize, smallWidgetSize);
+    U4Gmin.setSize(smallWidgetSize, smallWidgetSize);
+    U4Gmax.setSize(smallWidgetSize, smallWidgetSize);
+    U1Gmin.setTextBoxStyle(noTextBox);
+    U1Gmax.setTextBoxStyle(noTextBox);
+    U2Gmin.setTextBoxStyle(noTextBox);
+    U2Gmax.setTextBoxStyle(noTextBox);
+    U3Gmin.setTextBoxStyle(noTextBox);
+    U3Gmax.setTextBoxStyle(noTextBox);
+    U4Gmin.setTextBoxStyle(noTextBox);
+    U4Gmax.setTextBoxStyle(noTextBox);
+    U1Gmin.setSliderStyle(juce::Slider::RotaryVerticalDrag);
+    U1Gmax.setSliderStyle(juce::Slider::RotaryVerticalDrag);
+    U2Gmin.setSliderStyle(juce::Slider::RotaryVerticalDrag);
+    U2Gmax.setSliderStyle(juce::Slider::RotaryVerticalDrag);
+    U3Gmin.setSliderStyle(juce::Slider::RotaryVerticalDrag);
+    U3Gmax.setSliderStyle(juce::Slider::RotaryVerticalDrag);
+    U4Gmin.setSliderStyle(juce::Slider::RotaryVerticalDrag);
+    U4Gmax.setSliderStyle(juce::Slider::RotaryVerticalDrag);
+
+    addAndMakeVisible(&U1Hmin);
+    addAndMakeVisible(&U1Hmax);
+    addAndMakeVisible(&U2Hmin);
+    addAndMakeVisible(&U2Hmax);
+    addAndMakeVisible(&U3Hmin);
+    addAndMakeVisible(&U3Hmax);
+    addAndMakeVisible(&U4Hmin);
+    addAndMakeVisible(&U4Hmax);
+    U1Hmin.setSize(smallWidgetSize, smallWidgetSize);
+    U1Hmax.setSize(smallWidgetSize, smallWidgetSize);
+    U2Hmin.setSize(smallWidgetSize, smallWidgetSize);
+    U2Hmax.setSize(smallWidgetSize, smallWidgetSize);
+    U3Hmin.setSize(smallWidgetSize, smallWidgetSize);
+    U3Hmax.setSize(smallWidgetSize, smallWidgetSize);
+    U4Hmin.setSize(smallWidgetSize, smallWidgetSize);
+    U4Hmax.setSize(smallWidgetSize, smallWidgetSize);
+    U1Hmin.setTextBoxStyle(noTextBox);
+    U1Hmax.setTextBoxStyle(noTextBox);
+    U2Hmin.setTextBoxStyle(noTextBox);
+    U2Hmax.setTextBoxStyle(noTextBox);
+    U3Hmin.setTextBoxStyle(noTextBox);
+    U3Hmax.setTextBoxStyle(noTextBox);
+    U4Hmin.setTextBoxStyle(noTextBox);
+    U4Hmax.setTextBoxStyle(noTextBox);
+    U1Hmin.setSliderStyle(juce::Slider::RotaryVerticalDrag);
+    U1Hmax.setSliderStyle(juce::Slider::RotaryVerticalDrag);
+    U2Hmin.setSliderStyle(juce::Slider::RotaryVerticalDrag);
+    U2Hmax.setSliderStyle(juce::Slider::RotaryVerticalDrag);
+    U3Hmin.setSliderStyle(juce::Slider::RotaryVerticalDrag);
+    U3Hmax.setSliderStyle(juce::Slider::RotaryVerticalDrag);
+    U4Hmin.setSliderStyle(juce::Slider::RotaryVerticalDrag);
+    U4Hmax.setSliderStyle(juce::Slider::RotaryVerticalDrag);
+      
 }
 
 NonLinAudioProcessorEditor::~NonLinAudioProcessorEditor()
@@ -304,6 +499,60 @@ void NonLinAudioProcessorEditor::resized()
     U4Bmin.setBounds(colB4, row2, smallWidget, smallWidget);
     U4Bmax.setBounds(colB4 + 50, row2, smallWidget, smallWidget);
 
+    U1Cmin.setBounds(colB1, row3, smallWidget, smallWidget);
+    U1Cmax.setBounds(colB1 + 50, row3, smallWidget, smallWidget);
+    U2Cmin.setBounds(colB2, row3, smallWidget, smallWidget);
+    U2Cmax.setBounds(colB2 + 50, row3, smallWidget, smallWidget);
+    U3Cmin.setBounds(colB3, row3, smallWidget, smallWidget);
+    U3Cmax.setBounds(colB3 + 50, row3, smallWidget, smallWidget);
+    U4Cmin.setBounds(colB4, row3, smallWidget, smallWidget);
+    U4Cmax.setBounds(colB4 + 50, row3, smallWidget, smallWidget);
+
+    U1Dmin.setBounds(colB1, row4, smallWidget, smallWidget);
+    U1Dmax.setBounds(colB1 + 50, row4, smallWidget, smallWidget);
+    U2Dmin.setBounds(colB2, row4, smallWidget, smallWidget);
+    U2Dmax.setBounds(colB2 + 50, row4, smallWidget, smallWidget);
+    U3Dmin.setBounds(colB3, row4, smallWidget, smallWidget);
+    U3Dmax.setBounds(colB3 + 50, row4, smallWidget, smallWidget);
+    U4Dmin.setBounds(colB4, row4, smallWidget, smallWidget);
+    U4Dmax.setBounds(colB4 + 50, row4, smallWidget, smallWidget);
+
+    U1Emin.setBounds(colB1, row5, smallWidget, smallWidget);
+    U1Emax.setBounds(colB1 + 50, row5, smallWidget, smallWidget);
+    U2Emin.setBounds(colB2, row5, smallWidget, smallWidget);
+    U2Emax.setBounds(colB2 + 50, row5, smallWidget, smallWidget);
+    U3Emin.setBounds(colB3, row5, smallWidget, smallWidget);
+    U3Emax.setBounds(colB3 + 50, row5, smallWidget, smallWidget);
+    U4Emin.setBounds(colB4, row5, smallWidget, smallWidget);
+    U4Emax.setBounds(colB4 + 50, row5, smallWidget, smallWidget);
+
+    U1Fmin.setBounds(colB1, row6, smallWidget, smallWidget);
+    U1Fmax.setBounds(colB1 + 50, row6, smallWidget, smallWidget);
+    U2Fmin.setBounds(colB2, row6, smallWidget, smallWidget);
+    U2Fmax.setBounds(colB2 + 50, row6, smallWidget, smallWidget);
+    U3Fmin.setBounds(colB3, row6, smallWidget, smallWidget);
+    U3Fmax.setBounds(colB3 + 50, row6, smallWidget, smallWidget);
+    U4Fmin.setBounds(colB4, row6, smallWidget, smallWidget);
+    U4Fmax.setBounds(colB4 + 50, row6, smallWidget, smallWidget);
+
+    U1Gmin.setBounds(colB1, row7, smallWidget, smallWidget);
+    U1Gmax.setBounds(colB1 + 50, row7, smallWidget, smallWidget);
+    U2Gmin.setBounds(colB2, row7, smallWidget, smallWidget);
+    U2Gmax.setBounds(colB2 + 50, row7, smallWidget, smallWidget);
+    U3Gmin.setBounds(colB3, row7, smallWidget, smallWidget);
+    U3Gmax.setBounds(colB3 + 50, row7, smallWidget, smallWidget);
+    U4Gmin.setBounds(colB4, row7, smallWidget, smallWidget);
+    U4Gmax.setBounds(colB4 + 50, row7, smallWidget, smallWidget);
+
+    U1Hmin.setBounds(colB1, row8, smallWidget, smallWidget);
+    U1Hmax.setBounds(colB1 + 50, row8, smallWidget, smallWidget);
+    U2Hmin.setBounds(colB2, row8, smallWidget, smallWidget);
+    U2Hmax.setBounds(colB2 + 50, row8, smallWidget, smallWidget);
+    U3Hmin.setBounds(colB3, row8, smallWidget, smallWidget);
+    U3Hmax.setBounds(colB3 + 50, row8, smallWidget, smallWidget);
+    U4Hmin.setBounds(colB4, row8, smallWidget, smallWidget);
+    U4Hmax.setBounds(colB4 + 50, row8, smallWidget, smallWidget);
+
     //---------------------------------------------------------
 
     paramA1.setBounds(col1, row1, wid, height);
@@ -347,9 +596,5 @@ void NonLinAudioProcessorEditor::resized()
     slot7.setBounds(5, row7 + 15, wid, height);
     slot8.setBounds(5, row8 + 15, wid, height);
 
-
-
-
-
-    //param[0].setBounds(col3, row2, wid, height); // fail
+    oversample.setBounds(5, 15, wid, height);
 }

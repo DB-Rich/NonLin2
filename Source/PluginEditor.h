@@ -29,8 +29,6 @@ private:
     // access the processor object that created it.
     NonLinAudioProcessor& audioProcessor;
 
-    //juce::Array<juce::Slider> param; // does not work - would want juce Owned Array
-
     juce::Slider paramA1;
     juce::Slider paramA2;
     juce::Slider paramA3;
@@ -77,6 +75,8 @@ private:
     juce::ComboBox slot7;
     juce::ComboBox slot8;
 
+    juce::ComboBox oversample;
+
     juce::Slider U1Amin;
     juce::Slider U1Amax;
     juce::Slider U2Amin;
@@ -94,6 +94,60 @@ private:
     juce::Slider U3Bmax;
     juce::Slider U4Bmin;
     juce::Slider U4Bmax;
+
+    juce::Slider U1Cmin;
+    juce::Slider U1Cmax;
+    juce::Slider U2Cmin;
+    juce::Slider U2Cmax;
+    juce::Slider U3Cmin;
+    juce::Slider U3Cmax;
+    juce::Slider U4Cmin;
+    juce::Slider U4Cmax;
+
+    juce::Slider U1Dmin;
+    juce::Slider U1Dmax;
+    juce::Slider U2Dmin;
+    juce::Slider U2Dmax;
+    juce::Slider U3Dmin;
+    juce::Slider U3Dmax;
+    juce::Slider U4Dmin;
+    juce::Slider U4Dmax;
+
+    juce::Slider U1Emin;
+    juce::Slider U1Emax;
+    juce::Slider U2Emin;
+    juce::Slider U2Emax;
+    juce::Slider U3Emin;
+    juce::Slider U3Emax;
+    juce::Slider U4Emin;
+    juce::Slider U4Emax;
+
+    juce::Slider U1Fmin;
+    juce::Slider U1Fmax;
+    juce::Slider U2Fmin;
+    juce::Slider U2Fmax;
+    juce::Slider U3Fmin;
+    juce::Slider U3Fmax;
+    juce::Slider U4Fmin;
+    juce::Slider U4Fmax;
+
+    juce::Slider U1Gmin;
+    juce::Slider U1Gmax;
+    juce::Slider U2Gmin;
+    juce::Slider U2Gmax;
+    juce::Slider U3Gmin;
+    juce::Slider U3Gmax;
+    juce::Slider U4Gmin;
+    juce::Slider U4Gmax;
+
+    juce::Slider U1Hmin;
+    juce::Slider U1Hmax;
+    juce::Slider U2Hmin;
+    juce::Slider U2Hmax;
+    juce::Slider U3Hmin;
+    juce::Slider U3Hmax;
+    juce::Slider U4Hmin;
+    juce::Slider U4Hmax;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (NonLinAudioProcessorEditor)
 };
