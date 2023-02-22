@@ -77,6 +77,16 @@ private:
 
     juce::ComboBox oversample;
 
+    juce::ComboBox option1;
+    juce::ComboBox option2;
+    juce::ComboBox option3;
+    juce::ComboBox option4;
+    juce::ComboBox option5;
+    juce::ComboBox option6;
+    juce::ComboBox option7;
+    juce::ComboBox option8;
+
+
     juce::Slider U1Amin;
     juce::Slider U1Amax;
     juce::Slider U2Amin;

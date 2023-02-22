@@ -10,9 +10,9 @@ const enum blockTypes {
     b_gain,
     b_filter,
     b_nonLin,
+    b_dcOffset,
     b_upSamp,
-    b_downSamp,
-    b_dcOffset
+    b_downSamp
 };
 
 const enum filterParams {

@@ -162,8 +162,124 @@ NonLinAudioProcessorEditor::NonLinAudioProcessorEditor (NonLinAudioProcessor& p)
     slot7.setSize(90, 30);
     slot8.setSize(90, 30);
 
+    const juce::StringArray blockTypes("None", "Gain", "Filter", "Shape", "Offset");
+    slot1.addItemList(blockTypes, 1);
+    slot2.addItemList(blockTypes, 1);
+    slot3.addItemList(blockTypes, 1);
+    slot4.addItemList(blockTypes, 1);
+    slot5.addItemList(blockTypes, 1);
+    slot6.addItemList(blockTypes, 1);
+    slot7.addItemList(blockTypes, 1);
+    slot8.addItemList(blockTypes, 1);
+
+    const juce::StringArray overSampAmt("1x", "2x", "4x", "8x");
+    oversample.addItemList(overSampAmt, 1);  
     addAndMakeVisible(&oversample);
     oversample.setSize(90, 30);
+    //oversampleAttachment.reset(new ComboBoxAttachment(valueTreeState, "viewcombo", viewCombo));
+
+    const juce::StringArray defaultOptions("N/A", "N/A", "N/A", "N/A");
+
+    auto changeOptions = [&](unsigned int slot, unsigned int type, juce::ComboBox * option) {
+        setBlockType(&p.nonLin[0], slot, (enum blockTypes)type);    //set the type in the data model
+        setBlockType(&p.nonLin[1], slot, (enum blockTypes)type);
+        const juce::StringArray noOptions("N/A", "N/A", "N/A", "N/A");
+        const juce::StringArray gainOptions("Single", "Split", "N/A", "N/A");
+        const juce::StringArray filterOptions("LP", "HP", "AP", "N/A");
+        const juce::StringArray nonLinOptions("tanh", "softclip", "xxx");
+        const juce::StringArray offsetOptions("N/A", "N/A", "N/A", "N/A");
+        auto itemId = option->getSelectedId();       
+        switch (type) {
+        case 0:
+        default:
+            for (unsigned int i = 0; i < 4; i++)  {
+                option->changeItemText(i + 1, noOptions[i]);
+            }           
+            break;
+        case 1:
+            for (unsigned int i = 0; i < 4; i++) {
+                option->changeItemText(i + 1, gainOptions[i]);
+            }
+            break;
+        case 2:
+            for (unsigned int i = 0; i < 4; i++) {
+                option->changeItemText(i + 1, filterOptions[i]);
+            }
+            break;
+        case 3:
+            for (unsigned int i = 0; i < 4; i++) {
+                option->changeItemText(i + 1, nonLinOptions[i]);
+            }
+            break;
+        case 4:
+            for (unsigned int i = 0; i < 4; i++) {
+                option->changeItemText(i + 1, offsetOptions[i]);
+            }
+            break;
+        }
+        option->setSelectedId(itemId);
+        option->repaint();
+    };
+
+    slot1.onChange = [changeOptions, this]() {
+        auto val = slot1.getSelectedItemIndex();
+        changeOptions(0, val, &option1);
+    };
+    slot2.onChange = [changeOptions, this]() {
+        auto val = slot2.getSelectedItemIndex();
+        changeOptions(1, val, &option2);
+    };
+    slot3.onChange = [changeOptions, this]() {
+        auto val = slot3.getSelectedItemIndex();
+        changeOptions(2, val, &option3);
+    };
+    slot4.onChange = [changeOptions, this]() {
+        auto val = slot4.getSelectedItemIndex();
+        changeOptions(3, val, &option4);
+    };
+    slot5.onChange = [changeOptions, this]() {
+        auto val = slot5.getSelectedItemIndex();
+        changeOptions(4, val, &option5);
+    };
+    slot6.onChange = [changeOptions, this]() {
+        auto val = slot6.getSelectedItemIndex();
+        changeOptions(5, val, &option6);
+    };
+    slot7.onChange = [changeOptions, this]() {
+        auto val = slot7.getSelectedItemIndex();
+        changeOptions(6, val, &option7);
+    };
+    slot8.onChange = [changeOptions, this]() {
+        auto val = slot8.getSelectedItemIndex();
+        changeOptions(7, val, &option8);
+    };
+ 
+    option1.addItemList(defaultOptions, 1);
+    option2.addItemList(defaultOptions, 1);
+    option3.addItemList(defaultOptions, 1);
+    option4.addItemList(defaultOptions, 1);
+    option5.addItemList(defaultOptions, 1);
+    option6.addItemList(defaultOptions, 1);
+    option7.addItemList(defaultOptions, 1);
+    option8.addItemList(defaultOptions, 1);
+
+    addAndMakeVisible(&option1);
+    option1.setSize(90, 30); 
+    addAndMakeVisible(&option2);
+    option2.setSize(90, 30);
+    addAndMakeVisible(&option3);
+    option3.setSize(90, 30);
+    addAndMakeVisible(&option4);
+    option4.setSize(90, 30);
+    addAndMakeVisible(&option5);
+    option5.setSize(90, 30);
+    addAndMakeVisible(&option6);
+    option6.setSize(90, 30);
+    addAndMakeVisible(&option7);
+    option7.setSize(90, 30);
+    addAndMakeVisible(&option8);
+    option8.setSize(90, 30);
+    
 
     addAndMakeVisible(&U1Amin);
     addAndMakeVisible(&U1Amax);
@@ -464,14 +580,13 @@ void NonLinAudioProcessorEditor::resized()
     auto row6 = row5 + widgetSize;
     auto row7 = row6 + widgetSize;
     auto row8 = row7 + widgetSize;
-    auto row9 = row8 + widgetSize;
 
     auto col2 = col1 + widgetSize;
     auto col3 = col2 + widgetSize;
     auto col4 = col3 + widgetSize;
     auto col5 = col4 + widgetSize;
 
-    auto colB1 = col4 + 50;
+    auto colB1 = col4 + 110;
     auto colB2 = colB1 + bigWid;
     auto colB3 = colB2 + bigWid;
     auto colB4 = colB3 + bigWid;
@@ -595,6 +710,15 @@ void NonLinAudioProcessorEditor::resized()
     slot6.setBounds(5, row6 + 15, wid, height);
     slot7.setBounds(5, row7 + 15, wid, height);
     slot8.setBounds(5, row8 + 15, wid, height);
+
+    option1.setBounds(col4, row1 + 15, wid, height);
+    option2.setBounds(col4, row2 + 15, wid, height);
+    option3.setBounds(col4, row3 + 15, wid, height);
+    option4.setBounds(col4, row4 + 15, wid, height);
+    option5.setBounds(col4, row5 + 15, wid, height);
+    option6.setBounds(col4, row6 + 15, wid, height);
+    option7.setBounds(col4, row7 + 15, wid, height);
+    option8.setBounds(col4, row8 + 15, wid, height);
 
     oversample.setBounds(5, 15, wid, height);
 }

@@ -58,10 +58,12 @@ public:
     void getStateInformation (juce::MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
 
+    nonLinFX nonLin[2];
+
 private:
     //==============================================================================
 
-    nonLinFX nonLin[2];
+    
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (NonLinAudioProcessor)
 };
