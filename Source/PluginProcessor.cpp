@@ -22,7 +22,17 @@ NonLinAudioProcessor::NonLinAudioProcessor()
                        .withOutput ("Output", juce::AudioChannelSet::stereo(), true)
                      #endif
                        )
-#endif
+#endif    
+    
+    , parameters(*this, nullptr, juce::Identifier("nonlin2") , {  
+    // APVTS parameter creation - with ranges
+    // parameterID, parameter name,  minimum value, maximum value, default value 
+    // must add here if have made an attachment
+
+    //std::make_unique<juce::AudioParameterFloat>("sourceX", "Source X", 15.f, 785.0f, 200.f),//must include offset!
+
+}) //end of parameters ctor
+
 {
 }
 
@@ -165,7 +175,7 @@ bool NonLinAudioProcessor::hasEditor() const
 
 juce::AudioProcessorEditor* NonLinAudioProcessor::createEditor()
 {
-    return new NonLinAudioProcessorEditor (*this);
+    return new NonLinAudioProcessorEditor (*this, parameters);
 }
 
 //==============================================================================
@@ -174,12 +184,18 @@ void NonLinAudioProcessor::getStateInformation (juce::MemoryBlock& destData)
     // You should use this method to store your parameters in the memory block.
     // You could do that either as raw data, or use the XML or ValueTree classes
     // as intermediaries to make it easy to save and load complex data.
+    auto state = parameters.copyState();
+    std::unique_ptr<juce::XmlElement> xml(state.createXml());
+    copyXmlToBinary(*xml, destData);
 }
 
 void NonLinAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
     // You should use this method to restore your parameters from this memory block,
     // whose contents will have been created by the getStateInformation() call.
+    std::unique_ptr<juce::XmlElement> xmlState(getXmlFromBinary(data, sizeInBytes));
+    if (xmlState.get() != nullptr && xmlState->hasTagName(parameters.state.getType()))
+        parameters.replaceState(juce::ValueTree::fromXml(*xmlState));
 }
 
 //==============================================================================
@@ -187,4 +203,10 @@ void NonLinAudioProcessor::setStateInformation (const void* data, int sizeInByte
 juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 {
     return new NonLinAudioProcessor();
+}
+
+void NonLinAudioProcessor::parameterChanged(const juce::String& parameterID, float newValue) {
+    if (parameterID == "") {
+        newValue = newValue; // TODO
+    }
 }

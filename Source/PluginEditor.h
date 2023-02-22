@@ -17,7 +17,7 @@
 class NonLinAudioProcessorEditor  : public juce::AudioProcessorEditor
 {
 public:
-    NonLinAudioProcessorEditor (NonLinAudioProcessor&);
+    NonLinAudioProcessorEditor (NonLinAudioProcessor&, juce::AudioProcessorValueTreeState& vts);
     ~NonLinAudioProcessorEditor() override;
 
     //==============================================================================
@@ -28,6 +28,14 @@ private:
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.
     NonLinAudioProcessor& audioProcessor;
+
+    //APVTS
+    juce::AudioProcessorValueTreeState& valueTreeState;
+
+    //shortcuts for attachments
+    using SliderAttachment = juce::AudioProcessorValueTreeState::SliderAttachment;
+    using ButtonAttachment = juce::AudioProcessorValueTreeState::ButtonAttachment;
+    using ComboBoxAttachment = juce::AudioProcessorValueTreeState::ComboBoxAttachment;
 
     juce::Slider paramA1;
     juce::Slider paramA2;

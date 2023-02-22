@@ -13,8 +13,8 @@
 #define noTextBox juce::Slider::NoTextBox, false, 90, 20
 
 //==============================================================================
-NonLinAudioProcessorEditor::NonLinAudioProcessorEditor (NonLinAudioProcessor& p)
-    : AudioProcessorEditor (&p), audioProcessor (p)
+NonLinAudioProcessorEditor::NonLinAudioProcessorEditor (NonLinAudioProcessor& p, juce::AudioProcessorValueTreeState& vts)
+    : AudioProcessorEditor(&p), audioProcessor(p), valueTreeState(vts)
 {
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.

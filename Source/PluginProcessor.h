@@ -16,6 +16,7 @@
 /**
 */
 class NonLinAudioProcessor  : public juce::AudioProcessor
+                            , private juce::AudioProcessorValueTreeState::Listener
                             #if JucePlugin_Enable_ARA
                              , public juce::AudioProcessorARAExtension
                             #endif
@@ -58,12 +59,16 @@ public:
     void getStateInformation (juce::MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
 
+    void parameterChanged(const juce::String& parameterID, float newValue) override; //from Listener class
+
     nonLinFX nonLin[2];
 
 private:
     //==============================================================================
 
-    
+    juce::AudioProcessorValueTreeState parameters;
+
+    //std::atomic<float>* p_sourceX = nullptr;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (NonLinAudioProcessor)
 };
