@@ -605,39 +605,8 @@
         fx->filterType[block] = type;
     };
 
-    void runMatrix(nonLinFX* const fx) {
-        //triggered whenever a 'real' param is changed - DAW or UI, and on startup
-        //gets 'built' on startup, no values stored in state
-        //only processes assigned assignments - cpu save
-        //mixes internal (up to 3x16) algo params, and 4x macros
-        //outputs to blockSettings - then assigned to DSP
-
-        for (unsigned int knob = 0; knob < 4; knob++) {
-            for (unsigned int i = 0; i < TOTAL_ASSIGNMEMTS; i++) {
-                fx->blockSettings[i][knob] = 0.0f; // clear all - neccessary? or want actual param here ??
-            }
-        }
-        
-        for (unsigned int knob = 0; knob < 4; knob++) {
-            auto matrixAmountsLocal = 0.0f;
-            for (unsigned int i = 0; i < TOTAL_ASSIGNMEMTS; i++) {
-                auto UI1 = 1.0f * fx->matrixAmounts[i][knob]; // TODO REAL PARAM = knobValue
-             //   fx->blockSettings[i][knob] += juce::jmap<float>(UI1, fx->matrixMins[i][knob], fx->matrixMaxs[i][knob]); // matrixSkew here?
-            }
-        }
-        
-
-        //float blockSettings[TOTAL_ASSIGNMEMTS][3]{ 0.0f }; // up to 3 attributes per block: p1, p2, p3
-        //float matrixAmounts[TOTAL_ASSIGNMEMTS][4]{ 0.0f }; // for applying the 4x UI knobs to matrix system
-        //float matrixMins[TOTAL_ASSIGNMEMTS][4]{ 0.0f }; // min range per assignment
-        //float matrixMaxs[TOTAL_ASSIGNMEMTS][4]{ 1.0f }; // max range per assignment
-        //float matrixSkew[TOTAL_ASSIGNMEMTS][4]{ 0.0f }; // log skew per assignment
-    }
-
 //#ifdef __cplusplus
 //}
 //#endif 
 
-
 #endif // __fx_api_h
-

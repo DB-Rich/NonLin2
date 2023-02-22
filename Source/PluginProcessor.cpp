@@ -72,79 +72,76 @@ NonLinAudioProcessor::NonLinAudioProcessor()
     std::make_unique<juce::AudioParameterInt>("option8", "option 8", 1, 4, 1),
 
     std::make_unique<juce::AudioParameterFloat>("U1AP1", "U1AP1", -100.f, 100.0f, 0.f),
-std::make_unique<juce::AudioParameterFloat>("U1AP2", "U1AP2", -100.f, 100.0f, 0.f),
-std::make_unique<juce::AudioParameterFloat>("U2AP1", "U2AP1", -100.f, 100.0f, 0.f),
-std::make_unique<juce::AudioParameterFloat>("U2AP2", "U2AP2", -100.f, 100.0f, 0.f),
-std::make_unique<juce::AudioParameterFloat>("U3AP1", "U3AP1", -100.f, 100.0f, 0.f),
-std::make_unique<juce::AudioParameterFloat>("U3AP2", "U3AP2", -100.f, 100.0f, 0.f),
-std::make_unique<juce::AudioParameterFloat>("U4AP1", "U4AP1", -100.f, 100.0f, 0.f),
-std::make_unique<juce::AudioParameterFloat>("U4AP2", "U4AP2", -100.f, 100.0f, 0.f),
+    std::make_unique<juce::AudioParameterFloat>("U1AP2", "U1AP2", -100.f, 100.0f, 0.f),
+    std::make_unique<juce::AudioParameterFloat>("U2AP1", "U2AP1", -100.f, 100.0f, 0.f),
+    std::make_unique<juce::AudioParameterFloat>("U2AP2", "U2AP2", -100.f, 100.0f, 0.f),
+    std::make_unique<juce::AudioParameterFloat>("U3AP1", "U3AP1", -100.f, 100.0f, 0.f),
+    std::make_unique<juce::AudioParameterFloat>("U3AP2", "U3AP2", -100.f, 100.0f, 0.f),
+    std::make_unique<juce::AudioParameterFloat>("U4AP1", "U4AP1", -100.f, 100.0f, 0.f),
+    std::make_unique<juce::AudioParameterFloat>("U4AP2", "U4AP2", -100.f, 100.0f, 0.f),
 
-std::make_unique<juce::AudioParameterFloat>("U1BP1", "U1BP1", -100.f, 100.0f, 0.f),
-std::make_unique<juce::AudioParameterFloat>("U1BP2", "U1BP2", -100.f, 100.0f, 0.f),
-std::make_unique<juce::AudioParameterFloat>("U2BP1", "U2BP1", -100.f, 100.0f, 0.f),
-std::make_unique<juce::AudioParameterFloat>("U2BP2", "U2BP2", -100.f, 100.0f, 0.f),
-std::make_unique<juce::AudioParameterFloat>("U3BP1", "U3BP1", -100.f, 100.0f, 0.f),
-std::make_unique<juce::AudioParameterFloat>("U3BP2", "U3BP2", -100.f, 100.0f, 0.f),
-std::make_unique<juce::AudioParameterFloat>("U4BP1", "U4BP1", -100.f, 100.0f, 0.f),
-std::make_unique<juce::AudioParameterFloat>("U4BP2", "U4BP2", -100.f, 100.0f, 0.f),
+    std::make_unique<juce::AudioParameterFloat>("U1BP1", "U1BP1", -100.f, 100.0f, 0.f),
+    std::make_unique<juce::AudioParameterFloat>("U1BP2", "U1BP2", -100.f, 100.0f, 0.f),
+    std::make_unique<juce::AudioParameterFloat>("U2BP1", "U2BP1", -100.f, 100.0f, 0.f),
+    std::make_unique<juce::AudioParameterFloat>("U2BP2", "U2BP2", -100.f, 100.0f, 0.f),
+    std::make_unique<juce::AudioParameterFloat>("U3BP1", "U3BP1", -100.f, 100.0f, 0.f),
+    std::make_unique<juce::AudioParameterFloat>("U3BP2", "U3BP2", -100.f, 100.0f, 0.f),
+    std::make_unique<juce::AudioParameterFloat>("U4BP1", "U4BP1", -100.f, 100.0f, 0.f),
+    std::make_unique<juce::AudioParameterFloat>("U4BP2", "U4BP2", -100.f, 100.0f, 0.f),
 
-std::make_unique<juce::AudioParameterFloat>("U1CP1", "U1CP1", -100.f, 100.0f, 0.f),
-std::make_unique<juce::AudioParameterFloat>("U1CP2", "U1CP2", -100.f, 100.0f, 0.f),
-std::make_unique<juce::AudioParameterFloat>("U2CP1", "U2CP1", -100.f, 100.0f, 0.f),
-std::make_unique<juce::AudioParameterFloat>("U2CP2", "U2CP2", -100.f, 100.0f, 0.f),
-std::make_unique<juce::AudioParameterFloat>("U3CP1", "U3CP1", -100.f, 100.0f, 0.f),
-std::make_unique<juce::AudioParameterFloat>("U3CP2", "U3CP2", -100.f, 100.0f, 0.f),
-std::make_unique<juce::AudioParameterFloat>("U4CP1", "U4CP1", -100.f, 100.0f, 0.f),
-std::make_unique<juce::AudioParameterFloat>("U4CP2", "U4CP2", -100.f, 100.0f, 0.f),
+    std::make_unique<juce::AudioParameterFloat>("U1CP1", "U1CP1", -100.f, 100.0f, 0.f),
+    std::make_unique<juce::AudioParameterFloat>("U1CP2", "U1CP2", -100.f, 100.0f, 0.f),
+    std::make_unique<juce::AudioParameterFloat>("U2CP1", "U2CP1", -100.f, 100.0f, 0.f),
+    std::make_unique<juce::AudioParameterFloat>("U2CP2", "U2CP2", -100.f, 100.0f, 0.f),
+    std::make_unique<juce::AudioParameterFloat>("U3CP1", "U3CP1", -100.f, 100.0f, 0.f),
+    std::make_unique<juce::AudioParameterFloat>("U3CP2", "U3CP2", -100.f, 100.0f, 0.f),
+    std::make_unique<juce::AudioParameterFloat>("U4CP1", "U4CP1", -100.f, 100.0f, 0.f),
+    std::make_unique<juce::AudioParameterFloat>("U4CP2", "U4CP2", -100.f, 100.0f, 0.f),
 
-std::make_unique<juce::AudioParameterFloat>("U1DP1", "U1DP1", -100.f, 100.0f, 0.f),
-std::make_unique<juce::AudioParameterFloat>("U1DP2", "U1DP2", -100.f, 100.0f, 0.f),
-std::make_unique<juce::AudioParameterFloat>("U2DP1", "U2DP1", -100.f, 100.0f, 0.f),
-std::make_unique<juce::AudioParameterFloat>("U2DP2", "U2DP2", -100.f, 100.0f, 0.f),
-std::make_unique<juce::AudioParameterFloat>("U3DP1", "U3DP1", -100.f, 100.0f, 0.f),
-std::make_unique<juce::AudioParameterFloat>("U3DP2", "U3DP2", -100.f, 100.0f, 0.f),
-std::make_unique<juce::AudioParameterFloat>("U4DP1", "U4DP1", -100.f, 100.0f, 0.f),
-std::make_unique<juce::AudioParameterFloat>("U4DP2", "U4DP2", -100.f, 100.0f, 0.f),
+    std::make_unique<juce::AudioParameterFloat>("U1DP1", "U1DP1", -100.f, 100.0f, 0.f),
+    std::make_unique<juce::AudioParameterFloat>("U1DP2", "U1DP2", -100.f, 100.0f, 0.f),
+    std::make_unique<juce::AudioParameterFloat>("U2DP1", "U2DP1", -100.f, 100.0f, 0.f),
+    std::make_unique<juce::AudioParameterFloat>("U2DP2", "U2DP2", -100.f, 100.0f, 0.f),
+    std::make_unique<juce::AudioParameterFloat>("U3DP1", "U3DP1", -100.f, 100.0f, 0.f),
+    std::make_unique<juce::AudioParameterFloat>("U3DP2", "U3DP2", -100.f, 100.0f, 0.f),
+    std::make_unique<juce::AudioParameterFloat>("U4DP1", "U4DP1", -100.f, 100.0f, 0.f),
+    std::make_unique<juce::AudioParameterFloat>("U4DP2", "U4DP2", -100.f, 100.0f, 0.f),
 
-std::make_unique<juce::AudioParameterFloat>("U1EP1", "U1EP1", -100.f, 100.0f, 0.f),
-std::make_unique<juce::AudioParameterFloat>("U1EP2", "U1EP2", -100.f, 100.0f, 0.f),
-std::make_unique<juce::AudioParameterFloat>("U2EP1", "U2EP1", -100.f, 100.0f, 0.f),
-std::make_unique<juce::AudioParameterFloat>("U2EP2", "U2EP2", -100.f, 100.0f, 0.f),
-std::make_unique<juce::AudioParameterFloat>("U3EP1", "U3EP1", -100.f, 100.0f, 0.f),
-std::make_unique<juce::AudioParameterFloat>("U3EP2", "U3EP2", -100.f, 100.0f, 0.f),
-std::make_unique<juce::AudioParameterFloat>("U4EP1", "U4EP1", -100.f, 100.0f, 0.f),
-std::make_unique<juce::AudioParameterFloat>("U4EP2", "U4EP2", -100.f, 100.0f, 0.f),
+    std::make_unique<juce::AudioParameterFloat>("U1EP1", "U1EP1", -100.f, 100.0f, 0.f),
+    std::make_unique<juce::AudioParameterFloat>("U1EP2", "U1EP2", -100.f, 100.0f, 0.f),
+    std::make_unique<juce::AudioParameterFloat>("U2EP1", "U2EP1", -100.f, 100.0f, 0.f),
+    std::make_unique<juce::AudioParameterFloat>("U2EP2", "U2EP2", -100.f, 100.0f, 0.f),
+    std::make_unique<juce::AudioParameterFloat>("U3EP1", "U3EP1", -100.f, 100.0f, 0.f),
+    std::make_unique<juce::AudioParameterFloat>("U3EP2", "U3EP2", -100.f, 100.0f, 0.f),
+    std::make_unique<juce::AudioParameterFloat>("U4EP1", "U4EP1", -100.f, 100.0f, 0.f),
+    std::make_unique<juce::AudioParameterFloat>("U4EP2", "U4EP2", -100.f, 100.0f, 0.f),
 
-std::make_unique<juce::AudioParameterFloat>("U1FP1", "U1FP1", -100.f, 100.0f, 0.f),
-std::make_unique<juce::AudioParameterFloat>("U1FP2", "U1FP2", -100.f, 100.0f, 0.f),
-std::make_unique<juce::AudioParameterFloat>("U2FP1", "U2FP1", -100.f, 100.0f, 0.f),
-std::make_unique<juce::AudioParameterFloat>("U2FP2", "U2FP2", -100.f, 100.0f, 0.f),
-std::make_unique<juce::AudioParameterFloat>("U3FP1", "U3FP1", -100.f, 100.0f, 0.f),
-std::make_unique<juce::AudioParameterFloat>("U3FP2", "U3FP2", -100.f, 100.0f, 0.f),
-std::make_unique<juce::AudioParameterFloat>("U4FP1", "U4FP1", -100.f, 100.0f, 0.f),
-std::make_unique<juce::AudioParameterFloat>("U4FP2", "U4FP2", -100.f, 100.0f, 0.f),
+    std::make_unique<juce::AudioParameterFloat>("U1FP1", "U1FP1", -100.f, 100.0f, 0.f),
+    std::make_unique<juce::AudioParameterFloat>("U1FP2", "U1FP2", -100.f, 100.0f, 0.f),
+    std::make_unique<juce::AudioParameterFloat>("U2FP1", "U2FP1", -100.f, 100.0f, 0.f),
+    std::make_unique<juce::AudioParameterFloat>("U2FP2", "U2FP2", -100.f, 100.0f, 0.f),
+    std::make_unique<juce::AudioParameterFloat>("U3FP1", "U3FP1", -100.f, 100.0f, 0.f),
+    std::make_unique<juce::AudioParameterFloat>("U3FP2", "U3FP2", -100.f, 100.0f, 0.f),
+    std::make_unique<juce::AudioParameterFloat>("U4FP1", "U4FP1", -100.f, 100.0f, 0.f),
+    std::make_unique<juce::AudioParameterFloat>("U4FP2", "U4FP2", -100.f, 100.0f, 0.f),
 
-std::make_unique<juce::AudioParameterFloat>("U1GP1", "U1GP1", -100.f, 100.0f, 0.f),
-std::make_unique<juce::AudioParameterFloat>("U1GP2", "U1GP2", -100.f, 100.0f, 0.f),
-std::make_unique<juce::AudioParameterFloat>("U2GP1", "U2GP1", -100.f, 100.0f, 0.f),
-std::make_unique<juce::AudioParameterFloat>("U2GP2", "U2GP2", -100.f, 100.0f, 0.f),
-std::make_unique<juce::AudioParameterFloat>("U3GP1", "U3GP1", -100.f, 100.0f, 0.f),
-std::make_unique<juce::AudioParameterFloat>("U3GP2", "U3GP2", -100.f, 100.0f, 0.f),
-std::make_unique<juce::AudioParameterFloat>("U4GP1", "U4GP1", -100.f, 100.0f, 0.f),
-std::make_unique<juce::AudioParameterFloat>("U4GP2", "U4GP2", -100.f, 100.0f, 0.f),
+    std::make_unique<juce::AudioParameterFloat>("U1GP1", "U1GP1", -100.f, 100.0f, 0.f),
+    std::make_unique<juce::AudioParameterFloat>("U1GP2", "U1GP2", -100.f, 100.0f, 0.f),
+    std::make_unique<juce::AudioParameterFloat>("U2GP1", "U2GP1", -100.f, 100.0f, 0.f),
+    std::make_unique<juce::AudioParameterFloat>("U2GP2", "U2GP2", -100.f, 100.0f, 0.f),
+    std::make_unique<juce::AudioParameterFloat>("U3GP1", "U3GP1", -100.f, 100.0f, 0.f),
+    std::make_unique<juce::AudioParameterFloat>("U3GP2", "U3GP2", -100.f, 100.0f, 0.f),
+    std::make_unique<juce::AudioParameterFloat>("U4GP1", "U4GP1", -100.f, 100.0f, 0.f),
+    std::make_unique<juce::AudioParameterFloat>("U4GP2", "U4GP2", -100.f, 100.0f, 0.f),
 
-std::make_unique<juce::AudioParameterFloat>("U1HP1", "U1HP1", -100.f, 100.0f, 0.f),
-std::make_unique<juce::AudioParameterFloat>("U1HP2", "U1HP2", -100.f, 100.0f, 0.f),
-std::make_unique<juce::AudioParameterFloat>("U2HP1", "U2HP1", -100.f, 100.0f, 0.f),
-std::make_unique<juce::AudioParameterFloat>("U2HP2", "U2HP2", -100.f, 100.0f, 0.f),
-std::make_unique<juce::AudioParameterFloat>("U3HP1", "U3HP1", -100.f, 100.0f, 0.f),
-std::make_unique<juce::AudioParameterFloat>("U3HP2", "U3HP2", -100.f, 100.0f, 0.f),
-std::make_unique<juce::AudioParameterFloat>("U4HP1", "U4HP1", -100.f, 100.0f, 0.f),
-std::make_unique<juce::AudioParameterFloat>("U4HP2", "U4HP2", -100.f, 100.0f, 0.f),
-
-    
-
+    std::make_unique<juce::AudioParameterFloat>("U1HP1", "U1HP1", -100.f, 100.0f, 0.f),
+    std::make_unique<juce::AudioParameterFloat>("U1HP2", "U1HP2", -100.f, 100.0f, 0.f),
+    std::make_unique<juce::AudioParameterFloat>("U2HP1", "U2HP1", -100.f, 100.0f, 0.f),
+    std::make_unique<juce::AudioParameterFloat>("U2HP2", "U2HP2", -100.f, 100.0f, 0.f),
+    std::make_unique<juce::AudioParameterFloat>("U3HP1", "U3HP1", -100.f, 100.0f, 0.f),
+    std::make_unique<juce::AudioParameterFloat>("U3HP2", "U3HP2", -100.f, 100.0f, 0.f),
+    std::make_unique<juce::AudioParameterFloat>("U4HP1", "U4HP1", -100.f, 100.0f, 0.f),
+    std::make_unique<juce::AudioParameterFloat>("U4HP2", "U4HP2", -100.f, 100.0f, 0.f),
 
 }) //end of parameters ctor
 
@@ -391,7 +388,7 @@ void NonLinAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce:
     for (int channel = 0; channel < totalNumInputChannels; ++channel)  {
         auto* channelData = buffer.getWritePointer (channel);
 
-        //assymmetrical clipping system on audio block:
+        //nonlin processing on audio block:
         processSaturation(&nonLin[channel], channelData, bufferSize);
     }
 }
@@ -435,10 +432,332 @@ juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 }
 
 void NonLinAudioProcessor::parameterChanged(const juce::String& parameterID, float newValue) {
-    if (parameterID == "parama1") {
-        newValue = newValue; // TODO
+
+    auto calcParam = [&](unsigned int block, unsigned int param) {
+        nonLin[0].matrixFinalAmounts[block][param] = nonLin[0].blockSettings[block][param];
+        for (unsigned int knob = 0; knob < 4; knob++) {
+            nonLin[0].matrixFinalAmounts[block][param] += nonLin[0].uiValue[knob] * nonLin[0].matrixRange[block][knob][param];
+        }
+        nonLin[1].matrixFinalAmounts[block][param] = nonLin[0].matrixFinalAmounts[block][param];
+    };
+
+    auto normValue = newValue * 0.01f;
+
+    if (parameterID == "UI1") {
+        nonLin[0].uiValue[0] = normValue;
+        for (unsigned int  i = s_freeStart; i <= s_freeEnd; i++) {
+            calcParam(i, 0); 
+            calcParam(i, 1);
+        }
+    }
+    else if (parameterID == "UI2") {
+        nonLin[0].uiValue[1] = normValue;
+        for (unsigned int i = s_freeStart; i <= s_freeEnd; i++) {
+            calcParam(i, 0);
+            calcParam(i, 1);
+        }
+    }
+    else if (parameterID == "UI3") {
+        nonLin[0].uiValue[2] = normValue;
+        for (unsigned int i = s_freeStart; i <= s_freeEnd; i++) {
+            calcParam(i, 0);
+            calcParam(i, 1);
+        }
+    }
+    else if (parameterID == "UI4") {
+        nonLin[0].uiValue[3] = normValue;
+        for (unsigned int i = s_freeStart; i <= s_freeEnd; i++) {
+            calcParam(i, 0);
+            calcParam(i, 1);
+        }
+    }
+
+    else if (parameterID == "parama1") {
+        nonLin[0].blockSettings[s_free4][0] = normValue;
+        nonLin[1].blockSettings[s_free4][0] = normValue; // NOT REQUIRED ??? CHeCK
+        calcParam(s_free4, 0);
     }
     else if (parameterID == "parama2") {
-        newValue = newValue; // TODO
+        nonLin[0].blockSettings[s_free4][1] = normValue;
+        nonLin[1].blockSettings[s_free4][1] = normValue;
+        calcParam(s_free4, 1);
     }
+    else if (parameterID == "paramb1") {
+        nonLin[0].blockSettings[s_free5][0] = normValue;
+        nonLin[1].blockSettings[s_free5][0] = normValue;
+        calcParam(s_free5, 0);
+    }
+    else if (parameterID == "paramb2") {
+        nonLin[0].blockSettings[s_free5][1] = normValue;
+        nonLin[1].blockSettings[s_free5][1] = normValue;
+        calcParam(s_free5, 1);
+    }
+
+    else if (parameterID == "paramc1") {
+        nonLin[0].blockSettings[s_free6][0] = normValue;
+        nonLin[1].blockSettings[s_free6][0] = normValue;
+        calcParam(s_free6, 0);
+    }
+    else if (parameterID == "paramc2") {
+        nonLin[0].blockSettings[s_free6][1] = normValue;
+        nonLin[1].blockSettings[s_free6][1] = normValue;
+        calcParam(s_free6, 1);
+    }
+    else if (parameterID == "paramd1") {
+        nonLin[0].blockSettings[s_free7][0] = normValue;
+        nonLin[1].blockSettings[s_free7][0] = normValue;
+        calcParam(s_free7, 0);
+    }
+    else if (parameterID == "paramd2") {
+        nonLin[0].blockSettings[s_free7][1] = normValue;
+        nonLin[1].blockSettings[s_free7][1] = normValue;
+        calcParam(s_free7, 1);
+    }
+
+    else if (parameterID == "parame1") {
+        nonLin[0].blockSettings[s_free8][0] = normValue;
+        nonLin[1].blockSettings[s_free8][0] = normValue;
+        calcParam(s_free8, 0);
+    }
+    else if (parameterID == "parame2") {
+        nonLin[0].blockSettings[s_free8][1] = normValue;
+        nonLin[1].blockSettings[s_free8][1] = normValue;
+        calcParam(s_free8, 1);
+    }
+    else if (parameterID == "paramf1") {
+        nonLin[0].blockSettings[s_free9][0] = normValue;
+        nonLin[1].blockSettings[s_free9][0] = normValue;
+        calcParam(s_free9, 0);
+    }
+    else if (parameterID == "paramf2") {
+        nonLin[0].blockSettings[s_free9][1] = normValue;
+        nonLin[1].blockSettings[s_free9][1] = normValue;
+        calcParam(s_free9, 1);
+    }
+
+    else if (parameterID == "paramg1") {
+        nonLin[0].blockSettings[s_free10][0] = normValue;
+        nonLin[1].blockSettings[s_free10][0] = normValue;
+        calcParam(s_free10, 0);
+    }
+    else if (parameterID == "paramg2") {
+        nonLin[0].blockSettings[s_free10][1] = normValue;
+        nonLin[1].blockSettings[s_free10][1] = normValue;
+        calcParam(s_free10, 1);
+    }
+    else if (parameterID == "paramh1") {
+        nonLin[0].blockSettings[s_free11][0] = normValue;
+        nonLin[1].blockSettings[s_free11][0] = normValue;
+        calcParam(s_free11, 0);
+    }
+
+    //---------------------------------------------------------------
+
+    else if (parameterID == "U1AP1") {
+        nonLin[0].matrixRange[s_free4][0][0] = normValue; // [TOTAL_ASSIGNMEMTS][NUM_PANEL_KNOBS][2]
+        calcParam(s_free4, 0);
+    }
+    else if (parameterID == "U1AP2") {
+        nonLin[0].matrixRange[s_free4][0][1] = normValue;
+        calcParam(s_free4, 1);
+    }
+    else if (parameterID == "U2AP1") {
+        nonLin[0].matrixRange[s_free4][1][0] = normValue;
+        calcParam(s_free4, 1);
+    }
+    else if (parameterID == "U2AP2") {
+        nonLin[0].matrixRange[s_free4][1][1] = normValue;
+        calcParam(s_free4, 1);
+    }
+    else if (parameterID == "U3AP1") {
+        nonLin[0].matrixRange[s_free4][2][0] = normValue; // [TOTAL_ASSIGNMEMTS][NUM_PANEL_KNOBS][2]
+        calcParam(s_free4, 0);
+    }
+    else if (parameterID == "U3AP2") {
+        nonLin[0].matrixRange[s_free4][2][1] = normValue;
+        calcParam(s_free4, 1);
+    }
+    else if (parameterID == "U4AP1") {
+        nonLin[0].matrixRange[s_free4][3][0] = normValue;
+        calcParam(s_free4, 1);
+    }
+    else if (parameterID == "U4AP2") {
+        nonLin[0].matrixRange[s_free4][3][1] = normValue;
+        calcParam(s_free4, 1);
+    }
+    //-----------------------------------------------------------
+
+    else if (parameterID == "U1BP1") {
+    nonLin[0].matrixRange[s_free5][0][0] = normValue; // [TOTAL_ASSIGNMEMTS][NUM_PANEL_KNOBS][2]
+    calcParam(s_free5, 0);
+    }
+    else if (parameterID == "U1BP2") {
+    nonLin[0].matrixRange[s_free5][0][1] = normValue;
+    calcParam(s_free5, 1);
+    }
+    else if (parameterID == "U2BP1") {
+    nonLin[0].matrixRange[s_free5][1][0] = normValue;
+    calcParam(s_free5, 1);
+    }
+    else if (parameterID == "U2BP2") {
+    nonLin[0].matrixRange[s_free5][1][1] = normValue;
+    calcParam(s_free5, 1);
+    }
+    else if (parameterID == "U3BP1") {
+    nonLin[0].matrixRange[s_free5][2][0] = normValue; // [TOTAL_ASSIGNMEMTS][NUM_PANEL_KNOBS][2]
+    calcParam(s_free5, 0);
+    }
+    else if (parameterID == "U3BP2") {
+    nonLin[0].matrixRange[s_free5][2][1] = normValue;
+    calcParam(s_free5, 1);
+    }
+    else if (parameterID == "U4BP1") {
+    nonLin[0].matrixRange[s_free5][3][0] = normValue;
+    calcParam(s_free5, 1);
+    }
+    else if (parameterID == "U4BP2") {
+    nonLin[0].matrixRange[s_free5][3][1] = normValue;
+    calcParam(s_free5, 1);
+    }
+
+    //-----------------------------------------------------------
+
+    else if (parameterID == "U1CP1") {
+    nonLin[0].matrixRange[s_free6][0][0] = normValue; // [TOTAL_ASSIGNMEMTS][NUM_PANEL_KNOBS][2]
+    calcParam(s_free6, 0);
+    }
+    else if (parameterID == "U1CP2") {
+    nonLin[0].matrixRange[s_free6][0][1] = normValue;
+    calcParam(s_free6, 1);
+    }
+    else if (parameterID == "U2CP1") {
+    nonLin[0].matrixRange[s_free6][1][0] = normValue;
+    calcParam(s_free6, 1);
+    }
+    else if (parameterID == "U2CP2") {
+    nonLin[0].matrixRange[s_free6][1][1] = normValue;
+    calcParam(s_free6, 1);
+    }
+    else if (parameterID == "U3CP1") {
+    nonLin[0].matrixRange[s_free6][2][0] = normValue; // [TOTAL_ASSIGNMEMTS][NUM_PANEL_KNOBS][2]
+    calcParam(s_free6, 0);
+    }
+    else if (parameterID == "U3CP2") {
+    nonLin[0].matrixRange[s_free6][2][1] = normValue;
+    calcParam(s_free6, 1);
+    }
+    else if (parameterID == "U4CP1") {
+    nonLin[0].matrixRange[s_free6][3][0] = normValue;
+    calcParam(s_free6, 1);
+    }
+    else if (parameterID == "U4CP2") {
+    nonLin[0].matrixRange[s_free6][3][1] = normValue;
+    calcParam(s_free6, 1);
+    }
+
+    //-----------------------------------------------------------
+
+    else if (parameterID == "U1DP1") {
+    nonLin[0].matrixRange[s_free7][0][0] = normValue; // [TOTAL_ASSIGNMEMTS][NUM_PANEL_KNOBS][2]
+    calcParam(s_free7, 0);
+    }
+    else if (parameterID == "U1DP2") {
+    nonLin[0].matrixRange[s_free7][0][1] = normValue;
+    calcParam(s_free7, 1);
+    }
+    else if (parameterID == "U2DP1") {
+    nonLin[0].matrixRange[s_free7][1][0] = normValue;
+    calcParam(s_free7, 1);
+    }
+    else if (parameterID == "U2DP2") {
+    nonLin[0].matrixRange[s_free7][1][1] = normValue;
+    calcParam(s_free7, 1);
+    }
+    else if (parameterID == "U3DP1") {
+    nonLin[0].matrixRange[s_free7][2][0] = normValue; // [TOTAL_ASSIGNMEMTS][NUM_PANEL_KNOBS][2]
+    calcParam(s_free7, 0);
+    }
+    else if (parameterID == "U3DP2") {
+    nonLin[0].matrixRange[s_free7][2][1] = normValue;
+    calcParam(s_free7, 1);
+    }
+    else if (parameterID == "U4DP1") {
+    nonLin[0].matrixRange[s_free7][3][0] = normValue;
+    calcParam(s_free7, 1);
+    }
+    else if (parameterID == "U4DP2") {
+    nonLin[0].matrixRange[s_free7][3][1] = normValue;
+    calcParam(s_free7, 1);
+    }
+
+    //-----------------------------------------------------------
+
+    else if (parameterID == "U1EP1") {
+    nonLin[0].matrixRange[s_free7][0][0] = normValue; // [TOTAL_ASSIGNMEMTS][NUM_PANEL_KNOBS][2]
+    calcParam(s_free7, 0);
+    }
+    else if (parameterID == "U1EP2") {
+    nonLin[0].matrixRange[s_free7][0][1] = normValue;
+    calcParam(s_free7, 1);
+    }
+    else if (parameterID == "U2EP1") {
+    nonLin[0].matrixRange[s_free7][1][0] = normValue;
+    calcParam(s_free7, 1);
+    }
+    else if (parameterID == "U2EP2") {
+    nonLin[0].matrixRange[s_free7][1][1] = normValue;
+    calcParam(s_free7, 1);
+    }
+    else if (parameterID == "U3EP1") {
+    nonLin[0].matrixRange[s_free7][2][0] = normValue; // [TOTAL_ASSIGNMEMTS][NUM_PANEL_KNOBS][2]
+    calcParam(s_free7, 0);
+    }
+    else if (parameterID == "U3EP2") {
+    nonLin[0].matrixRange[s_free7][2][1] = normValue;
+    calcParam(s_free7, 1);
+    }
+    else if (parameterID == "U4EP1") {
+    nonLin[0].matrixRange[s_free7][3][0] = normValue;
+    calcParam(s_free7, 1);
+    }
+    else if (parameterID == "U4EP2") {
+    nonLin[0].matrixRange[s_free7][3][1] = normValue;
+    calcParam(s_free7, 1);
+    }
+
+    //-----------------------------------------------------------
+
+    else if (parameterID == "U1FP1") {
+    nonLin[0].matrixRange[s_free8][0][0] = normValue; // [TOTAL_ASSIGNMEMTS][NUM_PANEL_KNOBS][2]
+    calcParam(s_free8, 0);
+    }
+    else if (parameterID == "U1FP2") {
+    nonLin[0].matrixRange[s_free8][0][1] = normValue;
+    calcParam(s_free8, 1);
+    }
+    else if (parameterID == "U2FP1") {
+    nonLin[0].matrixRange[s_free8][1][0] = normValue;
+    calcParam(s_free8, 1);
+    }
+    else if (parameterID == "U2FP2") {
+    nonLin[0].matrixRange[s_free8][1][1] = normValue;
+    calcParam(s_free8, 1);
+    }
+    else if (parameterID == "U3FP1") {
+    nonLin[0].matrixRange[s_free8][2][0] = normValue; // [TOTAL_ASSIGNMEMTS][NUM_PANEL_KNOBS][2]
+    calcParam(s_free8, 0);
+    }
+    else if (parameterID == "U3FP2") {
+    nonLin[0].matrixRange[s_free8][2][1] = normValue;
+    calcParam(s_free8, 1);
+    }
+    else if (parameterID == "U4FP1") {
+    nonLin[0].matrixRange[s_free8][3][0] = normValue;
+    calcParam(s_free8, 1);
+    }
+    else if (parameterID == "U4FP2") {
+    nonLin[0].matrixRange[s_free8][3][1] = normValue;
+    calcParam(s_free8, 1);
+    }
+
 }
