@@ -31,35 +31,27 @@ private:
 
     juce::Slider paramA1;
     juce::Slider paramA2;
-    juce::Slider paramA3;
 
     juce::Slider paramB1;
     juce::Slider paramB2;
-    juce::Slider paramB3;
 
     juce::Slider paramC1;
     juce::Slider paramC2;
-    juce::Slider paramC3;
 
     juce::Slider paramD1;
     juce::Slider paramD2;
-    juce::Slider paramD3;
 
     juce::Slider paramE1;
     juce::Slider paramE2;
-    juce::Slider paramE3;
 
     juce::Slider paramF1;
     juce::Slider paramF2;
-    juce::Slider paramF3;
 
     juce::Slider paramG1;
     juce::Slider paramG2;
-    juce::Slider paramG3;
 
     juce::Slider paramH1;
     juce::Slider paramH2;
-    juce::Slider paramH3;
 
     juce::Slider UI1;
     juce::Slider UI2;

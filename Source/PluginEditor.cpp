@@ -43,107 +43,77 @@ NonLinAudioProcessorEditor::NonLinAudioProcessorEditor (NonLinAudioProcessor& p)
 
     addAndMakeVisible(&paramA1);
     addAndMakeVisible(&paramA2);
-    addAndMakeVisible(&paramA3);
     paramA1.setSize(widgetSize, widgetSize);
     paramA1.setSliderStyle(juce::Slider::RotaryVerticalDrag);
     paramA1.setTextBoxStyle(noTextBox); // textBoxBelow1
     paramA2.setSize(widgetSize, widgetSize);
     paramA2.setSliderStyle(juce::Slider::RotaryVerticalDrag);
     paramA2.setTextBoxStyle(noTextBox);
-    paramA3.setSize(widgetSize, widgetSize);
-    paramA3.setSliderStyle(juce::Slider::RotaryVerticalDrag);
-    paramA3.setTextBoxStyle(noTextBox);
 
     addAndMakeVisible(&paramB1);
     addAndMakeVisible(&paramB2);
-    addAndMakeVisible(&paramB3);
     paramB1.setSize(widgetSize, widgetSize);
     paramB1.setSliderStyle(juce::Slider::RotaryVerticalDrag);
     paramB1.setTextBoxStyle(noTextBox); // textBoxBelow1
     paramB2.setSize(widgetSize, widgetSize);
     paramB2.setSliderStyle(juce::Slider::RotaryVerticalDrag);
     paramB2.setTextBoxStyle(noTextBox);
-    paramB3.setSize(widgetSize, widgetSize);
-    paramB3.setSliderStyle(juce::Slider::RotaryVerticalDrag);
-    paramB3.setTextBoxStyle(noTextBox);
 
     addAndMakeVisible(&paramC1);
     addAndMakeVisible(&paramC2);
-    addAndMakeVisible(&paramC3);
     paramC1.setSize(widgetSize, widgetSize);
     paramC1.setSliderStyle(juce::Slider::RotaryVerticalDrag);
     paramC1.setTextBoxStyle(noTextBox); // textBoxBelow1
     paramC2.setSize(widgetSize, widgetSize);
     paramC2.setSliderStyle(juce::Slider::RotaryVerticalDrag);
     paramC2.setTextBoxStyle(noTextBox);
-    paramC3.setSize(widgetSize, widgetSize);
-    paramC3.setSliderStyle(juce::Slider::RotaryVerticalDrag);
-    paramC3.setTextBoxStyle(noTextBox);
 
     addAndMakeVisible(&paramD1);
     addAndMakeVisible(&paramD2);
-    addAndMakeVisible(&paramD3);
     paramD1.setSize(widgetSize, widgetSize);
     paramD1.setSliderStyle(juce::Slider::RotaryVerticalDrag);
     paramD1.setTextBoxStyle(noTextBox); // textBoxBelow1
     paramD2.setSize(widgetSize, widgetSize);
     paramD2.setSliderStyle(juce::Slider::RotaryVerticalDrag);
     paramD2.setTextBoxStyle(noTextBox);
-    paramD3.setSize(widgetSize, widgetSize);
-    paramD3.setSliderStyle(juce::Slider::RotaryVerticalDrag);
-    paramD3.setTextBoxStyle(noTextBox);
 
     addAndMakeVisible(&paramE1);
     addAndMakeVisible(&paramE2);
-    addAndMakeVisible(&paramE3);
     paramE1.setSize(widgetSize, widgetSize);
     paramE1.setSliderStyle(juce::Slider::RotaryVerticalDrag);
     paramE1.setTextBoxStyle(noTextBox); // textBoxBelow1
     paramE2.setSize(widgetSize, widgetSize);
     paramE2.setSliderStyle(juce::Slider::RotaryVerticalDrag);
     paramE2.setTextBoxStyle(noTextBox);
-    paramE3.setSize(widgetSize, widgetSize);
-    paramE3.setSliderStyle(juce::Slider::RotaryVerticalDrag);
-    paramE3.setTextBoxStyle(noTextBox);
 
     addAndMakeVisible(&paramF1);
     addAndMakeVisible(&paramF2);
-    addAndMakeVisible(&paramF3);
     paramF1.setSize(widgetSize, widgetSize);
     paramF1.setSliderStyle(juce::Slider::RotaryVerticalDrag);
     paramF1.setTextBoxStyle(noTextBox); // textBoxBelow1
     paramF2.setSize(widgetSize, widgetSize);
     paramF2.setSliderStyle(juce::Slider::RotaryVerticalDrag);
     paramF2.setTextBoxStyle(noTextBox);
-    paramF3.setSize(widgetSize, widgetSize);
-    paramF3.setSliderStyle(juce::Slider::RotaryVerticalDrag);
-    paramF3.setTextBoxStyle(noTextBox);
 
     addAndMakeVisible(&paramG1);
     addAndMakeVisible(&paramG2);
-    addAndMakeVisible(&paramG3);
     paramG1.setSize(widgetSize, widgetSize);
     paramG1.setSliderStyle(juce::Slider::RotaryVerticalDrag);
     paramG1.setTextBoxStyle(noTextBox); // textBoxBelow1
     paramG2.setSize(widgetSize, widgetSize);
     paramG2.setSliderStyle(juce::Slider::RotaryVerticalDrag);
     paramG2.setTextBoxStyle(noTextBox);
-    paramG3.setSize(widgetSize, widgetSize);
-    paramG3.setSliderStyle(juce::Slider::RotaryVerticalDrag);
-    paramG3.setTextBoxStyle(noTextBox);
 
     addAndMakeVisible(&paramH1);
     addAndMakeVisible(&paramH2);
-    addAndMakeVisible(&paramH3);
     paramH1.setSize(widgetSize, widgetSize);
     paramH1.setSliderStyle(juce::Slider::RotaryVerticalDrag);
     paramH1.setTextBoxStyle(noTextBox); // textBoxBelow1
     paramH2.setSize(widgetSize, widgetSize);
     paramH2.setSliderStyle(juce::Slider::RotaryVerticalDrag);
     paramH2.setTextBoxStyle(noTextBox);
-    paramH3.setSize(widgetSize, widgetSize);
-    paramH3.setSliderStyle(juce::Slider::RotaryVerticalDrag);
-    paramH3.setTextBoxStyle(noTextBox);
+
+    //=====================================================================
 
     addAndMakeVisible(&slot1);
     addAndMakeVisible(&slot2);
@@ -190,7 +160,6 @@ NonLinAudioProcessorEditor::NonLinAudioProcessorEditor (NonLinAudioProcessor& p)
         const juce::StringArray offsetOptions("N/A", "N/A", "N/A", "N/A");
         auto itemId = option->getSelectedId();       
         switch (type) {
-        case 0:
         default:
             for (unsigned int i = 0; i < 4; i++)  {
                 option->changeItemText(i + 1, noOptions[i]);
@@ -586,7 +555,7 @@ void NonLinAudioProcessorEditor::resized()
     auto col4 = col3 + widgetSize;
     auto col5 = col4 + widgetSize;
 
-    auto colB1 = col4 + 110;
+    auto colB1 = col4 + 50;
     auto colB2 = colB1 + bigWid;
     auto colB3 = colB2 + bigWid;
     auto colB4 = colB3 + bigWid;
@@ -672,35 +641,27 @@ void NonLinAudioProcessorEditor::resized()
 
     paramA1.setBounds(col1, row1, wid, height);
     paramA2.setBounds(col2, row1, wid, height);
-    paramA3.setBounds(col3, row1, wid, height);
 
     paramB1.setBounds(col1, row2, wid, height);
     paramB2.setBounds(col2, row2, wid, height);
-    paramB3.setBounds(col3, row2, wid, height);
 
     paramC1.setBounds(col1, row3, wid, height);
     paramC2.setBounds(col2, row3, wid, height);
-    paramC3.setBounds(col3, row3, wid, height);
 
     paramD1.setBounds(col1, row4, wid, height);
     paramD2.setBounds(col2, row4, wid, height);
-    paramD3.setBounds(col3, row4, wid, height);
 
     paramE1.setBounds(col1, row5, wid, height);
     paramE2.setBounds(col2, row5, wid, height);
-    paramE3.setBounds(col3, row5, wid, height);
 
     paramF1.setBounds(col1, row6, wid, height);
     paramF2.setBounds(col2, row6, wid, height);
-    paramF3.setBounds(col3, row6, wid, height);
 
     paramG1.setBounds(col1, row7, wid, height);
     paramG2.setBounds(col2, row7, wid, height);
-    paramG3.setBounds(col3, row7, wid, height);
 
     paramH1.setBounds(col1, row8, wid, height);
     paramH2.setBounds(col2, row8, wid, height);
-    paramH3.setBounds(col3, row8, wid, height);
 
     slot1.setBounds(5, row1 + 15, wid, height);
     slot2.setBounds(5, row2 + 15, wid, height);
@@ -711,14 +672,14 @@ void NonLinAudioProcessorEditor::resized()
     slot7.setBounds(5, row7 + 15, wid, height);
     slot8.setBounds(5, row8 + 15, wid, height);
 
-    option1.setBounds(col4, row1 + 15, wid, height);
-    option2.setBounds(col4, row2 + 15, wid, height);
-    option3.setBounds(col4, row3 + 15, wid, height);
-    option4.setBounds(col4, row4 + 15, wid, height);
-    option5.setBounds(col4, row5 + 15, wid, height);
-    option6.setBounds(col4, row6 + 15, wid, height);
-    option7.setBounds(col4, row7 + 15, wid, height);
-    option8.setBounds(col4, row8 + 15, wid, height);
+    option1.setBounds(col3, row1 + 15, wid, height);
+    option2.setBounds(col3, row2 + 15, wid, height);
+    option3.setBounds(col3, row3 + 15, wid, height);
+    option4.setBounds(col3, row4 + 15, wid, height);
+    option5.setBounds(col3, row5 + 15, wid, height);
+    option6.setBounds(col3, row6 + 15, wid, height);
+    option7.setBounds(col3, row7 + 15, wid, height);
+    option8.setBounds(col3, row8 + 15, wid, height);
 
     oversample.setBounds(5, 15, wid, height);
 }

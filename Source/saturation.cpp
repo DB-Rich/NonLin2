@@ -622,7 +622,7 @@
             auto matrixAmountsLocal = 0.0f;
             for (unsigned int i = 0; i < TOTAL_ASSIGNMEMTS; i++) {
                 auto UI1 = 1.0f * fx->matrixAmounts[i][knob]; // TODO REAL PARAM = knobValue
-                fx->blockSettings[i][knob] += juce::jmap<float>(UI1, fx->matrixMins[i][knob], fx->matrixMaxs[i][knob]); // matrixSkew here?
+             //   fx->blockSettings[i][knob] += juce::jmap<float>(UI1, fx->matrixMins[i][knob], fx->matrixMaxs[i][knob]); // matrixSkew here?
             }
         }
         

@@ -46,11 +46,11 @@ const enum blockStages {
 } blockStages;
 
 struct nonLinFX {
-    float blockSettings[TOTAL_ASSIGNMEMTS][3]{ 0.0f }; // up to 3 attributes per block: p1, p2, p3
-    float matrixAmounts[TOTAL_ASSIGNMEMTS][3]{ 0.0f }; // for applying the 4x UI knobs to matrix system
-    float matrixMins[TOTAL_ASSIGNMEMTS][3]{ 0.0f }; // min range per assignment
-    float matrixMaxs[TOTAL_ASSIGNMEMTS][3]{ 1.0f }; // max range per assignment
-    float matrixSkew[TOTAL_ASSIGNMEMTS][3]{ 0.0f }; // log skew per assignment
+    float blockSettings[TOTAL_ASSIGNMEMTS][2]{ 0.0f }; // up to 3 attributes per block: p1, p2, p3
+    float matrixAmounts[TOTAL_ASSIGNMEMTS][2]{ 0.0f }; // for applying the 4x UI knobs to matrix system
+    float matrixRange[TOTAL_ASSIGNMEMTS][2]{ 0.0f }; // min range per assignment
+   // float matrixMaxs[TOTAL_ASSIGNMEMTS][3]{ 1.0f }; // max range per assignment
+    float matrixSkew[TOTAL_ASSIGNMEMTS][2]{ 0.0f }; // log skew per assignment
     float panelValues[NUM_PANEL_KNOBS]{ 0.0f };
     float oversampleMult[TOTAL_ASSIGNMEMTS]{ 1.0f };
     enum blockTypes blockType[TOTAL_ASSIGNMEMTS]{ blockTypes::b_none };
