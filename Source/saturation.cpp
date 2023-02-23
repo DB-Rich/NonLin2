@@ -555,34 +555,34 @@
             float upSampBuffer[4096] = {};   //todo - make dynamic  
             //std::array<float, 2048> upSampBuffer;
             //std::vector<float, oversampBufferSize> upSampBuffer;
-            processBlockByType(FX, channelData, bufferSize, s_inputGain);
-            processBlockByType(FX, channelData, bufferSize, s_lpf1);
-            processBlockByTypeUpDown(FX, channelData, upSampBuffer, bufferSize, blockTypes::b_upSamp);
-            processBlockByType(FX, upSampBuffer, oversampBufferSize, s_lpf2);
+            //processBlockByType(FX, channelData, bufferSize, s_inputGain);
+            //processBlockByType(FX, channelData, bufferSize, s_lpf1);
+            //processBlockByTypeUpDown(FX, channelData, upSampBuffer, bufferSize, b_upSamp);
+            //processBlockByType(FX, upSampBuffer, oversampBufferSize, s_lpf2);
 
-            //non-lin sequence
-            for (unsigned int i = s_freeStart; i < s_freeEnd; i++) {
-                auto type = FX->blockType[i];
-                if (type != b_none)
-                    processBlockByType(FX, upSampBuffer, oversampBufferSize, i);
-            }
-            //downsample processing
-            processBlockByType(FX, upSampBuffer, oversampBufferSize, s_lpfOut1);
-            processBlockByTypeUpDown(FX, channelData, upSampBuffer, bufferSize, blockTypes::b_downSamp);
-            processBlockByType(FX, channelData, bufferSize, s_lpfOut2);
-            processBlockByType(FX, channelData, bufferSize, s_outGain);
+            ////non-lin sequence
+            //for (unsigned int i = s_freeStart; i < s_freeEnd; i++) {
+            //    auto type = FX->blockType[i];
+            //    if (type != b_none)
+            //        processBlockByType(FX, upSampBuffer, oversampBufferSize, i);
+            //}
+            ////downsample processing
+            //processBlockByType(FX, upSampBuffer, oversampBufferSize, s_lpfOut1);
+            //processBlockByTypeUpDown(FX, channelData, upSampBuffer, bufferSize, b_downSamp);
+            //processBlockByType(FX, channelData, bufferSize, s_lpfOut2);
+            //processBlockByType(FX, channelData, bufferSize, s_outGain);
         }
 
         else { //NO OVERSAMPLING:           
-            processBlockByType(FX, channelData, bufferSize, s_inputGain);
-            processBlockByType(FX, channelData, bufferSize, s_lpf1);
+            //processBlockByType(FX, channelData, bufferSize, s_inputGain);
+            //processBlockByType(FX, channelData, bufferSize, s_lpf1);
             //non-lin
             for (unsigned int i = s_freeStart; i < s_freeEnd; i++) {
                 if (FX->blockType[i] != b_none)
                     processBlockByType(FX, channelData, bufferSize, i);
             }
-            processBlockByType(FX, channelData, bufferSize, s_lpfOut2);
-            processBlockByType(FX, channelData, bufferSize, s_outGain);
+            //processBlockByType(FX, channelData, bufferSize, s_lpfOut2);
+            //processBlockByType(FX, channelData, bufferSize, s_outGain);
         }
     }
 

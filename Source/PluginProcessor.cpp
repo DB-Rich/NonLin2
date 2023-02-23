@@ -445,28 +445,28 @@ void NonLinAudioProcessor::parameterChanged(const juce::String& parameterID, flo
 
     auto normValue = newValue * 0.01f;
 
-    if (parameterID == "UI1") {
+    if (parameterID == "ui1") {
         nonLin[0].uiValue[0] = normValue;
         for (unsigned int  i = s_freeStart; i <= s_freeEnd; i++) {
             calcParam(i, 0); 
             calcParam(i, 1);
         }
     }
-    else if (parameterID == "UI2") {
+    else if (parameterID == "ui2") {
         nonLin[0].uiValue[1] = normValue;
         for (unsigned int i = s_freeStart; i <= s_freeEnd; i++) {
             calcParam(i, 0);
             calcParam(i, 1);
         }
     }
-    else if (parameterID == "UI3") {
+    else if (parameterID == "ui3") {
         nonLin[0].uiValue[2] = normValue;
         for (unsigned int i = s_freeStart; i <= s_freeEnd; i++) {
             calcParam(i, 0);
             calcParam(i, 1);
         }
     }
-    else if (parameterID == "UI4") {
+    else if (parameterID == "ui4") {
         nonLin[0].uiValue[3] = normValue;
         for (unsigned int i = s_freeStart; i <= s_freeEnd; i++) {
             calcParam(i, 0);
