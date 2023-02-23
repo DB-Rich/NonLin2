@@ -224,35 +224,35 @@ NonLinAudioProcessorEditor::NonLinAudioProcessorEditor (NonLinAudioProcessor& p,
 
     slot1.onChange = [changeOptions, this]() {
         auto val = slot1.getSelectedItemIndex();
-        changeOptions(0, val, &option1);
+        changeOptions(s_free4, val, &option1);
     };
     slot2.onChange = [changeOptions, this]() {
         auto val = slot2.getSelectedItemIndex();
-        changeOptions(1, val, &option2);
+        changeOptions(s_free5, val, &option2);
     };
     slot3.onChange = [changeOptions, this]() {
         auto val = slot3.getSelectedItemIndex();
-        changeOptions(2, val, &option3);
+        changeOptions(s_free6, val, &option3);
     };
     slot4.onChange = [changeOptions, this]() {
         auto val = slot4.getSelectedItemIndex();
-        changeOptions(3, val, &option4);
+        changeOptions(s_free7, val, &option4);
     };
     slot5.onChange = [changeOptions, this]() {
         auto val = slot5.getSelectedItemIndex();
-        changeOptions(4, val, &option5);
+        changeOptions(s_free8, val, &option5);
     };
     slot6.onChange = [changeOptions, this]() {
         auto val = slot6.getSelectedItemIndex();
-        changeOptions(5, val, &option6);
+        changeOptions(s_free9, val, &option6);
     };
     slot7.onChange = [changeOptions, this]() {
         auto val = slot7.getSelectedItemIndex();
-        changeOptions(6, val, &option7);
+        changeOptions(s_free10, val, &option7);
     };
     slot8.onChange = [changeOptions, this]() {
         auto val = slot8.getSelectedItemIndex();
-        changeOptions(7, val, &option8);
+        changeOptions(s_free11, val, &option8);
     };
  
     option1.addItemList(defaultOptions, 1);
