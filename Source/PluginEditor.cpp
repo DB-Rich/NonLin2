@@ -289,7 +289,6 @@ NonLinAudioProcessorEditor::NonLinAudioProcessorEditor (NonLinAudioProcessor& p,
     option6attachment.reset(new ComboBoxAttachment(valueTreeState, "option6", option6));
     option7attachment.reset(new ComboBoxAttachment(valueTreeState, "option7", option7));
     option8attachment.reset(new ComboBoxAttachment(valueTreeState, "option7", option8));
-    
 
     addAndMakeVisible(&U1AP1);
     addAndMakeVisible(&U1AP2);

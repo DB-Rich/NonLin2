@@ -443,12 +443,6 @@
                 setFilter(FX, i, sampleRate, samplesPerBlock);
             }
         }
-        //clear any buffers?
-
-        //load in matrix values:
-
-
-
     }
 
     void processBlockByTypeUpDown(nonLinFX* const FX, float* const channelData, float* const channelOutData, unsigned int bufferSize, enum blockTypes type) {
@@ -563,7 +557,7 @@
             //std::vector<float, oversampBufferSize> upSampBuffer;
             processBlockByType(FX, channelData, bufferSize, s_inputGain);
             processBlockByType(FX, channelData, bufferSize, s_lpf1);
-            processBlockByTypeUpDown(FX, channelData, upSampBuffer, bufferSize, blockTypes::b_upSamp); // s_upSample
+            processBlockByTypeUpDown(FX, channelData, upSampBuffer, bufferSize, blockTypes::b_upSamp);
             processBlockByType(FX, upSampBuffer, oversampBufferSize, s_lpf2);
 
             //non-lin sequence
@@ -574,7 +568,7 @@
             }
             //downsample processing
             processBlockByType(FX, upSampBuffer, oversampBufferSize, s_lpfOut1);
-            processBlockByTypeUpDown(FX, channelData, upSampBuffer, bufferSize, blockTypes::b_downSamp); // s_downample
+            processBlockByTypeUpDown(FX, channelData, upSampBuffer, bufferSize, blockTypes::b_downSamp);
             processBlockByType(FX, channelData, bufferSize, s_lpfOut2);
             processBlockByType(FX, channelData, bufferSize, s_outGain);
         }

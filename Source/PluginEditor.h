@@ -268,6 +268,5 @@ private:
     std::unique_ptr<SliderAttachment> U4HP1attachment;
     std::unique_ptr<SliderAttachment> U4HP2attachment;
 
-
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (NonLinAudioProcessorEditor)
 };
