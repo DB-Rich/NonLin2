@@ -434,11 +434,13 @@ juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 void NonLinAudioProcessor::parameterChanged(const juce::String& parameterID, float newValue) {
 
     auto calcParam = [&](unsigned int block, unsigned int param) {
-        nonLin[0].matrixFinalAmounts[block][param] = nonLin[0].blockSettings[block][param];
+        auto val = nonLin[0].blockSettings[block][param];
         for (unsigned int knob = 0; knob < 4; knob++) {
-            nonLin[0].matrixFinalAmounts[block][param] += nonLin[0].uiValue[knob] * nonLin[0].matrixRange[block][knob][param];
+            val += nonLin[0].uiValue[knob] * nonLin[0].matrixRange[block][knob][param];
         }
-        nonLin[1].matrixFinalAmounts[block][param] = nonLin[0].matrixFinalAmounts[block][param];
+        val = std::clamp<float>(val, 0.0f, 1.0f);
+        nonLin[0].matrixFinalAmounts[block][param] = val;
+        nonLin[1].matrixFinalAmounts[block][param] = val;
     };
 
     auto normValue = newValue * 0.01f;
@@ -570,7 +572,7 @@ void NonLinAudioProcessor::parameterChanged(const juce::String& parameterID, flo
         calcParam(s_free4, 1);
     }
     else if (parameterID == "U3AP1") {
-        nonLin[0].matrixRange[s_free4][2][0] = normValue; // [TOTAL_ASSIGNMEMTS][NUM_PANEL_KNOBS][2]
+        nonLin[0].matrixRange[s_free4][2][0] = normValue;
         calcParam(s_free4, 0);
     }
     else if (parameterID == "U3AP2") {
@@ -588,7 +590,7 @@ void NonLinAudioProcessor::parameterChanged(const juce::String& parameterID, flo
     //-----------------------------------------------------------
 
     else if (parameterID == "U1BP1") {
-    nonLin[0].matrixRange[s_free5][0][0] = normValue; // [TOTAL_ASSIGNMEMTS][NUM_PANEL_KNOBS][2]
+    nonLin[0].matrixRange[s_free5][0][0] = normValue;
     calcParam(s_free5, 0);
     }
     else if (parameterID == "U1BP2") {
@@ -604,7 +606,7 @@ void NonLinAudioProcessor::parameterChanged(const juce::String& parameterID, flo
     calcParam(s_free5, 1);
     }
     else if (parameterID == "U3BP1") {
-    nonLin[0].matrixRange[s_free5][2][0] = normValue; // [TOTAL_ASSIGNMEMTS][NUM_PANEL_KNOBS][2]
+    nonLin[0].matrixRange[s_free5][2][0] = normValue;
     calcParam(s_free5, 0);
     }
     else if (parameterID == "U3BP2") {
@@ -623,7 +625,7 @@ void NonLinAudioProcessor::parameterChanged(const juce::String& parameterID, flo
     //-----------------------------------------------------------
 
     else if (parameterID == "U1CP1") {
-    nonLin[0].matrixRange[s_free6][0][0] = normValue; // [TOTAL_ASSIGNMEMTS][NUM_PANEL_KNOBS][2]
+    nonLin[0].matrixRange[s_free6][0][0] = normValue;
     calcParam(s_free6, 0);
     }
     else if (parameterID == "U1CP2") {
@@ -639,7 +641,7 @@ void NonLinAudioProcessor::parameterChanged(const juce::String& parameterID, flo
     calcParam(s_free6, 1);
     }
     else if (parameterID == "U3CP1") {
-    nonLin[0].matrixRange[s_free6][2][0] = normValue; // [TOTAL_ASSIGNMEMTS][NUM_PANEL_KNOBS][2]
+    nonLin[0].matrixRange[s_free6][2][0] = normValue;
     calcParam(s_free6, 0);
     }
     else if (parameterID == "U3CP2") {
@@ -658,7 +660,7 @@ void NonLinAudioProcessor::parameterChanged(const juce::String& parameterID, flo
     //-----------------------------------------------------------
 
     else if (parameterID == "U1DP1") {
-    nonLin[0].matrixRange[s_free7][0][0] = normValue; // [TOTAL_ASSIGNMEMTS][NUM_PANEL_KNOBS][2]
+    nonLin[0].matrixRange[s_free7][0][0] = normValue;
     calcParam(s_free7, 0);
     }
     else if (parameterID == "U1DP2") {
@@ -674,7 +676,7 @@ void NonLinAudioProcessor::parameterChanged(const juce::String& parameterID, flo
     calcParam(s_free7, 1);
     }
     else if (parameterID == "U3DP1") {
-    nonLin[0].matrixRange[s_free7][2][0] = normValue; // [TOTAL_ASSIGNMEMTS][NUM_PANEL_KNOBS][2]
+    nonLin[0].matrixRange[s_free7][2][0] = normValue;
     calcParam(s_free7, 0);
     }
     else if (parameterID == "U3DP2") {
@@ -693,71 +695,153 @@ void NonLinAudioProcessor::parameterChanged(const juce::String& parameterID, flo
     //-----------------------------------------------------------
 
     else if (parameterID == "U1EP1") {
-    nonLin[0].matrixRange[s_free7][0][0] = normValue; // [TOTAL_ASSIGNMEMTS][NUM_PANEL_KNOBS][2]
-    calcParam(s_free7, 0);
+    nonLin[0].matrixRange[s_free8][0][0] = normValue;
+    calcParam(s_free8, 0);
     }
     else if (parameterID == "U1EP2") {
-    nonLin[0].matrixRange[s_free7][0][1] = normValue;
-    calcParam(s_free7, 1);
+    nonLin[0].matrixRange[s_free8][0][1] = normValue;
+    calcParam(s_free8, 1);
     }
     else if (parameterID == "U2EP1") {
-    nonLin[0].matrixRange[s_free7][1][0] = normValue;
-    calcParam(s_free7, 1);
+    nonLin[0].matrixRange[s_free8][1][0] = normValue;
+    calcParam(s_free8, 1);
     }
     else if (parameterID == "U2EP2") {
-    nonLin[0].matrixRange[s_free7][1][1] = normValue;
-    calcParam(s_free7, 1);
+    nonLin[0].matrixRange[s_free8][1][1] = normValue;
+    calcParam(s_free8, 1);
     }
     else if (parameterID == "U3EP1") {
-    nonLin[0].matrixRange[s_free7][2][0] = normValue; // [TOTAL_ASSIGNMEMTS][NUM_PANEL_KNOBS][2]
-    calcParam(s_free7, 0);
+    nonLin[0].matrixRange[s_free8][2][0] = normValue;
+    calcParam(s_free8, 0);
     }
     else if (parameterID == "U3EP2") {
-    nonLin[0].matrixRange[s_free7][2][1] = normValue;
-    calcParam(s_free7, 1);
+    nonLin[0].matrixRange[s_free8][2][1] = normValue;
+    calcParam(s_free8, 1);
     }
     else if (parameterID == "U4EP1") {
-    nonLin[0].matrixRange[s_free7][3][0] = normValue;
-    calcParam(s_free7, 1);
+    nonLin[0].matrixRange[s_free8][3][0] = normValue;
+    calcParam(s_free8, 1);
     }
     else if (parameterID == "U4EP2") {
-    nonLin[0].matrixRange[s_free7][3][1] = normValue;
-    calcParam(s_free7, 1);
+    nonLin[0].matrixRange[s_free8][3][1] = normValue;
+    calcParam(s_free8, 1);
     }
 
     //-----------------------------------------------------------
 
     else if (parameterID == "U1FP1") {
-    nonLin[0].matrixRange[s_free8][0][0] = normValue; // [TOTAL_ASSIGNMEMTS][NUM_PANEL_KNOBS][2]
-    calcParam(s_free8, 0);
+    nonLin[0].matrixRange[s_free9][0][0] = normValue;
+    calcParam(s_free9, 0);
     }
     else if (parameterID == "U1FP2") {
-    nonLin[0].matrixRange[s_free8][0][1] = normValue;
-    calcParam(s_free8, 1);
+    nonLin[0].matrixRange[s_free9][0][1] = normValue;
+    calcParam(s_free9, 1);
     }
     else if (parameterID == "U2FP1") {
-    nonLin[0].matrixRange[s_free8][1][0] = normValue;
-    calcParam(s_free8, 1);
+    nonLin[0].matrixRange[s_free9][1][0] = normValue;
+    calcParam(s_free9, 1);
     }
     else if (parameterID == "U2FP2") {
-    nonLin[0].matrixRange[s_free8][1][1] = normValue;
-    calcParam(s_free8, 1);
+    nonLin[0].matrixRange[s_free9][1][1] = normValue;
+    calcParam(s_free9, 1);
     }
     else if (parameterID == "U3FP1") {
-    nonLin[0].matrixRange[s_free8][2][0] = normValue; // [TOTAL_ASSIGNMEMTS][NUM_PANEL_KNOBS][2]
-    calcParam(s_free8, 0);
+    nonLin[0].matrixRange[s_free9][2][0] = normValue;
+    calcParam(s_free9, 0);
     }
     else if (parameterID == "U3FP2") {
-    nonLin[0].matrixRange[s_free8][2][1] = normValue;
-    calcParam(s_free8, 1);
+    nonLin[0].matrixRange[s_free9][2][1] = normValue;
+    calcParam(s_free9, 1);
     }
     else if (parameterID == "U4FP1") {
-    nonLin[0].matrixRange[s_free8][3][0] = normValue;
-    calcParam(s_free8, 1);
+    nonLin[0].matrixRange[s_free9][3][0] = normValue;
+    calcParam(s_free9, 1);
     }
     else if (parameterID == "U4FP2") {
-    nonLin[0].matrixRange[s_free8][3][1] = normValue;
-    calcParam(s_free8, 1);
+    nonLin[0].matrixRange[s_free9][3][1] = normValue;
+    calcParam(s_free9, 1);
+    }
+
+    //-----------------------------------------------------------
+
+    else if (parameterID == "U1GP1") {
+    nonLin[0].matrixRange[s_free10][0][0] = normValue;
+    calcParam(s_free10, 0);
+    }
+    else if (parameterID == "U1GP2") {
+    nonLin[0].matrixRange[s_free10][0][1] = normValue;
+    calcParam(s_free10, 1);
+    }
+    else if (parameterID == "U2GP1") {
+    nonLin[0].matrixRange[s_free10][1][0] = normValue;
+    calcParam(s_free10, 1);
+    }
+    else if (parameterID == "U2GP2") {
+    nonLin[0].matrixRange[s_free10][1][1] = normValue;
+    calcParam(s_free10, 1);
+    }
+    else if (parameterID == "U3GP1") {
+    nonLin[0].matrixRange[s_free10][2][0] = normValue;
+    calcParam(s_free10, 0);
+    }
+    else if (parameterID == "U3GP2") {
+    nonLin[0].matrixRange[s_free10][2][1] = normValue;
+    calcParam(s_free10, 1);
+    }
+    else if (parameterID == "U4GP1") {
+    nonLin[0].matrixRange[s_free10][3][0] = normValue;
+    calcParam(s_free10, 1);
+    }
+    else if (parameterID == "U4GP2") {
+    nonLin[0].matrixRange[s_free10][3][1] = normValue;
+    calcParam(s_free10, 1);
+    }
+
+    //-----------------------------------------------------------
+
+    else if (parameterID == "U1HP1") {
+    nonLin[0].matrixRange[s_free11][0][0] = normValue;
+    calcParam(s_free11, 0);
+    }
+    else if (parameterID == "U1HP2") {
+    nonLin[0].matrixRange[s_free11][0][1] = normValue;
+    calcParam(s_free11, 1);
+    }
+    else if (parameterID == "U2HP1") {
+    nonLin[0].matrixRange[s_free11][1][0] = normValue;
+    calcParam(s_free11, 1);
+    }
+    else if (parameterID == "U2HP2") {
+    nonLin[0].matrixRange[s_free11][1][1] = normValue;
+    calcParam(s_free11, 1);
+    }
+    else if (parameterID == "U3HP1") {
+    nonLin[0].matrixRange[s_free11][2][0] = normValue;
+    calcParam(s_free11, 0);
+    }
+    else if (parameterID == "U3HP2") {
+    nonLin[0].matrixRange[s_free11][2][1] = normValue;
+    calcParam(s_free11, 1);
+    }
+    else if (parameterID == "U4HP1") {
+    nonLin[0].matrixRange[s_free11][3][0] = normValue;
+    calcParam(s_free11, 1);
+    }
+    else if (parameterID == "U4HP2") {
+    nonLin[0].matrixRange[s_free11][3][1] = normValue;
+    calcParam(s_free11, 1);
+    }
+
+    //================================================================
+
+    else if (parameterID == "oversample") {
+    float mults[4] = { 1.f, 2.f, 4.f, 8.f };
+    nonLin[0].oversampleAmt = mults[(unsigned int)newValue - 1]; //could just use oversampleMult[s_upSample] ??
+    nonLin[1].oversampleAmt = nonLin[0].oversampleAmt;
+        for (unsigned int i = s_upSample; i <= s_downSamp; i++) {
+            nonLin[0].oversampleMult[i] = mults[(unsigned int)newValue];
+            nonLin[1].oversampleMult[i] = nonLin[0].oversampleMult[i];
+        }
     }
 
 }

@@ -387,6 +387,7 @@
 
     //called from init()
     void setUpFixedBlocks(nonLinFX* const FX) {
+
         //gain:
         FX->blockType[s_inputGain] = b_gain;
         FX->blockSettings[s_inputGain][0] = 1.0f; // pull in param ? todo
@@ -432,11 +433,7 @@
     }
 
     //called from prepareToPlay():
-    void initSaturation(nonLinFX* const FX, double sampleRate, int samplesPerBlock) { //  grab this stuff from the underlying 'preset' ?
-
-        //load in state values - TODO  
-
-        FX->oversampleAmt = 1.0f; // todo - bring in param value
+    void initSaturation(nonLinFX* const FX, double sampleRate, int samplesPerBlock) {
 
         setUpFixedBlocks(FX); //in/out gain, filters, up/down sampling
 
@@ -448,12 +445,16 @@
         }
         //clear any buffers?
 
+        //load in matrix values:
+
+
+
     }
 
     void processBlockByTypeUpDown(nonLinFX* const FX, float* const channelData, float* const channelOutData, unsigned int bufferSize, enum blockTypes type) {
         switch (type) {
         case blockTypes::b_upSamp: {
-            const auto mult = (unsigned int)FX->oversampleMult; // get multiplier
+            const auto mult = (unsigned int)FX->oversampleAmt; // get multiplier
             //first sample
             auto diff = channelData[0] - FX->prevBlockSample; // get difference for this vs last
             for (unsigned int j = 0; j < mult; j++) { // for each oversample                                   
@@ -473,7 +474,7 @@
         }
         break;
         case blockTypes::b_downSamp: {
-            auto mult = (unsigned int)FX->oversampleMult; // get multiplier
+            auto mult = (unsigned int)FX->oversampleAmt; // get multiplier
             for (unsigned int i = 0; i < bufferSize; i++) {
                 auto newIdx = i * mult;            //get oversample idx 
                 channelData[i] = channelOutData[newIdx]; // get sample at oversample idx
@@ -487,9 +488,8 @@
 
     void processBlockByType(nonLinFX* const FX, float* const channelData, unsigned int bufferSize, unsigned int blockID) {
         auto type = FX->blockType[blockID];
-        auto param1 = FX->blockSettings[blockID][0];
-        auto param2 = FX->blockSettings[blockID][1];
-        auto param3 = FX->blockSettings[blockID][2];
+        auto param1 = FX->matrixFinalAmounts[blockID][0];
+        auto param2 = FX->matrixFinalAmounts[blockID][1];
         switch (type) {
             case blockTypes::b_none: 
             break;
@@ -523,7 +523,7 @@
             break;
 
             case blockTypes::b_gain: { // { gainPos, gainNeg }
-                auto gainA = param1;  //todo make params [0.0, 1.0]
+                auto gainA = param1;
                 auto gainB = param2;
                 for (unsigned int i = 0; i < bufferSize; i++) {
                     if (channelData[i] > 0.0f) {
@@ -558,7 +558,7 @@
     void processSaturation(nonLinFX* const FX, float* channelData, unsigned int bufferSize) {
         if (FX->oversampleAmt > 1.0f)  {
             const auto oversampBufferSize = (unsigned int)((float)bufferSize * FX->oversampleAmt);
-            float upSampBuffer[2048] = {};   //todo - make dynamic  
+            float upSampBuffer[4096] = {};   //todo - make dynamic  
             //std::array<float, 2048> upSampBuffer;
             //std::vector<float, oversampBufferSize> upSampBuffer;
             processBlockByType(FX, channelData, bufferSize, s_inputGain);
@@ -595,12 +595,12 @@
     void setBlockType(nonLinFX* fx, unsigned int block, enum blockTypes type) {
         fx->blockType[block] = type;
     };
-    void setBlockValue(nonLinFX* fx, unsigned int block, unsigned int param, float amt) {
-        fx->blockSettings[block][param] = amt;
-    };
-    void setBlockOversample(nonLinFX* const fx, unsigned int block, float overSamp) {
-        fx->oversampleMult[block] = overSamp;
-    };
+    //void setBlockValue(nonLinFX* fx, unsigned int block, unsigned int param, float amt) {
+    //    fx->blockSettings[block][param] = amt;
+    //};
+    //void setBlockOversample(nonLinFX* const fx, unsigned int block, float overSamp) {
+    //    fx->oversampleMult[block] = overSamp;
+    //};
     void setFilterType(nonLinFX* const fx, unsigned int block, juce::dsp::FirstOrderTPTFilterType type) {
         fx->filterType[block] = type;
     };
