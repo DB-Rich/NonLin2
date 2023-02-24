@@ -397,7 +397,11 @@ void NonLinAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce:
         channelDataR[i] = wave;
         oscCounter++;
         if (oscCounter == waveLengthSamps) {
-            cycleReady = true;
+            if (!visTrigger && !cycleReady) {
+                cycleReady = true;
+                startOfWave = i;
+            }   
+            oscCounter = 0;
         }
     }
 
@@ -407,21 +411,21 @@ void NonLinAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce:
         processSaturation(&nonLin[channel], channelData, bufferSize);
     }
 
-    auto* channelDataX = buffer.getReadPointer(0);
-    //display wave
-    for (int i = 0; i < bufferSize; i++) {
-        if (visTrigger == false) {
-            visData[viewCounter] = channelDataX[i];
-            if (viewCounter == waveLengthSamps && cycleReady == true) {
+    //display wave:
+    auto* channelDataX = buffer.getReadPointer(0);    
+    if (cycleReady)  {
+        for (int i = startOfWave; i < bufferSize; i++) {
+            visData[fifoCounter] = channelDataX[i];
+            fifoCounter++;
+            if (fifoCounter == waveLengthSamps) {
+                fifoCounter = 0;
                 visTrigger = true;
-                viewCounter = 0;
                 cycleReady = false;
+                break;
             }
-            else
-                viewCounter++;
-            
         }
-    }
+        startOfWave = 0;
+    }  
 
 }
 

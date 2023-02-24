@@ -65,7 +65,8 @@ public:
     float visData[512];
     bool visTrigger{ false };
     int oscCounter = 0;
-    int viewCounter = 0;
+    int startOfWave = 0;
+    int fifoCounter = 0;
     int waveLengthSamps = 0;
     bool cycleReady = false;
 
