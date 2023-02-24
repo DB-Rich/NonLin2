@@ -626,6 +626,10 @@ NonLinAudioProcessorEditor::NonLinAudioProcessorEditor (NonLinAudioProcessor& p,
     U4HP1attachment.reset(new SliderAttachment(valueTreeState, "U4HP1", U4HP1));
     U4HP2attachment.reset(new SliderAttachment(valueTreeState, "U4HP2", U4HP2));
 
+   addAndMakeVisible(&waveViewer);
+   waveViewer.setSize(200, 100);
+   waveViewer.setDataPtr(p.visData, &p.visTrigger, &p.waveLengthSamps);
+
 }
 
 NonLinAudioProcessorEditor::~NonLinAudioProcessorEditor()
@@ -794,4 +798,6 @@ void NonLinAudioProcessorEditor::resized()
     option8.setBounds(col3, row8 + 15, wid, height);
 
     oversample.setBounds(5, 15, wid, height);
+
+    waveViewer.setBounds(100, 5, 200, 100);
 }

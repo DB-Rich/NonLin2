@@ -11,6 +11,74 @@
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
 
+
+class WaveViewer : public juce::Component
+    , private juce::Timer
+{
+public:
+    WaveViewer() {
+        startTimer(30);
+    };
+    ~WaveViewer() {
+        stopTimer();
+    };
+
+    void setDataPtr(float* data, bool * visTrigger, int * waveLengthSamps) {
+        _data = data;
+        _visTrigger = visTrigger;
+        _waveLengthSamps = waveLengthSamps;
+    }
+
+    //==============================================================================
+    void paint(juce::Graphics& g) override
+    {
+        g.fillAll(juce::Colours::black);
+
+        g.setOpacity(1.0f);
+        g.setColour(juce::Colours::white);
+        drawFrame(g);
+    }
+
+    void timerCallback() override
+    {
+        if (*_visTrigger ) {
+            repaint();
+            *_visTrigger = false;
+        }
+    }
+
+    void drawFrame(juce::Graphics& g) {
+
+        int waveSize = *_waveLengthSamps;
+
+        for (int i = 1; i < scopeSize; ++i)
+        {
+            auto width = getLocalBounds().getWidth();
+            auto height = getLocalBounds().getHeight() * 0.5f;
+
+            //g.drawLine({ (float)juce::jmap(i - 1, 0, scopeSize - 1, 0, width),
+            //                      juce::jmap(scopeData[i - 1], 0.0f, 1.0f, (float)height, 0.0f),
+            //              (float)juce::jmap(i,     0, scopeSize - 1, 0, width),
+            //                      juce::jmap(scopeData[i],     0.0f, 1.0f, (float)height, 0.0f) });
+            g.drawLine({ (float)juce::jmap(i - 1, 0, scopeSize - 1, 0, width),
+                      juce::jmap(_data[i - 1], 0.0f, 1.0f, (float)height, 0.0f),
+              (float)juce::jmap(i,     0, scopeSize - 1, 0, width),
+                      juce::jmap(_data[i],     0.0f, 1.0f, (float)height, 0.0f) });
+        }
+    }
+
+    enum {
+        scopeSize = 200,
+        fifoSize = 441
+    };
+
+private:
+    float* _data{ nullptr };
+    bool* _visTrigger{ nullptr };
+    int* _waveLengthSamps{ nullptr };
+};
+
+
 //==============================================================================
 /**
 */
@@ -267,6 +335,8 @@ private:
     std::unique_ptr<SliderAttachment> U3HP2attachment;
     std::unique_ptr<SliderAttachment> U4HP1attachment;
     std::unique_ptr<SliderAttachment> U4HP2attachment;
+
+    WaveViewer waveViewer;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (NonLinAudioProcessorEditor)
 };

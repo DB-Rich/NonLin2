@@ -545,6 +545,8 @@
             }
             break;
         }
+
+        
     }
 
     // PUBLIC::
@@ -584,21 +586,24 @@
             //processBlockByType(FX, channelData, bufferSize, s_lpfOut2);
             //processBlockByType(FX, channelData, bufferSize, s_outGain);
         }
+        
     }
 
     void setBlockType(nonLinFX* fx, unsigned int block, enum blockTypes type) {
         fx->blockType[block] = type;
     };
-    //void setBlockValue(nonLinFX* fx, unsigned int block, unsigned int param, float amt) {
-    //    fx->blockSettings[block][param] = amt;
-    //};
-    //void setBlockOversample(nonLinFX* const fx, unsigned int block, float overSamp) {
-    //    fx->oversampleMult[block] = overSamp;
-    //};
+
     void setFilterType(nonLinFX* const fx, unsigned int block, juce::dsp::FirstOrderTPTFilterType type) {
         fx->filterType[block] = type;
     };
 
+    //void setBlockValue(nonLinFX* fx, unsigned int block, unsigned int param, float amt) {
+//    fx->blockSettings[block][param] = amt;
+//};
+//void setBlockOversample(nonLinFX* const fx, unsigned int block, float overSamp) {
+//    fx->oversampleMult[block] = overSamp;
+//};
+// 
 //#ifdef __cplusplus
 //}
 //#endif 

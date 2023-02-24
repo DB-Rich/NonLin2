@@ -385,12 +385,44 @@ void NonLinAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce:
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, bufferSize);
 
+    //generate sine
+    auto freq = 250.0f;
+    auto sampleRate = (float)getSampleRate();
+    waveLengthSamps = sampleRate / freq;
+    auto* channelDataL = buffer.getWritePointer(0);
+    auto* channelDataR = buffer.getWritePointer(1);
+    for (int i = 0; i < bufferSize; i++) {
+        auto wave = sinf(juce::MathConstants<float>::twoPi * oscCounter / waveLengthSamps);
+        channelDataL[i] = wave;
+        channelDataR[i] = wave;
+        oscCounter++;
+        if (oscCounter == waveLengthSamps) {
+            cycleReady = true;
+        }
+    }
+
     for (int channel = 0; channel < totalNumInputChannels; ++channel)  {
         auto* channelData = buffer.getWritePointer (channel);
-
         //nonlin processing on audio block:
         processSaturation(&nonLin[channel], channelData, bufferSize);
     }
+
+    auto* channelDataX = buffer.getReadPointer(0);
+    //display wave
+    for (int i = 0; i < bufferSize; i++) {
+        if (visTrigger == false) {
+            visData[viewCounter] = channelDataX[i];
+            if (viewCounter == waveLengthSamps && cycleReady == true) {
+                visTrigger = true;
+                viewCounter = 0;
+                cycleReady = false;
+            }
+            else
+                viewCounter++;
+            
+        }
+    }
+
 }
 
 //==============================================================================

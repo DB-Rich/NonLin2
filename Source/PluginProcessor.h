@@ -62,6 +62,12 @@ public:
     void parameterChanged(const juce::String& parameterID, float newValue) override; //from Listener class
 
     nonLinFX nonLin[2];
+    float visData[512];
+    bool visTrigger{ false };
+    int oscCounter = 0;
+    int viewCounter = 0;
+    int waveLengthSamps = 0;
+    bool cycleReady = false;
 
 private:
     //==============================================================================
