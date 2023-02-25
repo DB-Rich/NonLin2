@@ -376,6 +376,15 @@ void NonLinAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce:
     auto totalNumOutputChannels = getTotalNumOutputChannels();
     auto bufferSize = buffer.getNumSamples();
 
+    for (int i = s_freeStart; i < s_freeEnd; i++) {
+        if (nonLin[0].blockType[i] == b_filter) {
+            nonLin[0].filter[i].setType()
+            auto freq = nonLin[0].matrixFinalAmounts[i][0] * 20000.f + 20.f;
+            nonLin[0].filter[i].setCutoffFrequency(freq);
+            nonLin[1].filter[i].setCutoffFrequency(freq);
+        }
+    }
+
     // In case we have more outputs than inputs, this code clears any output
     // channels that didn't contain input data, (because these aren't
     // guaranteed to be empty - they may contain garbage).
@@ -392,13 +401,13 @@ void NonLinAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce:
     auto* channelDataL = buffer.getWritePointer(0);
     auto* channelDataR = buffer.getWritePointer(1);
     for (int i = 0; i < bufferSize; i++) {
-        auto wave = sinf(juce::MathConstants<float>::twoPi * oscCounter / waveLengthSamps);
+        auto wave = 0.5f * sinf(juce::MathConstants<float>::twoPi * oscCounter / waveLengthSamps);
         channelDataL[i] = wave;
         channelDataR[i] = wave;
         oscCounter++;
         if (oscCounter == waveLengthSamps) {
             if (!visTrigger && !cycleReady) {
-                cycleReady = true;
+                cycleReady = true; //trigger start of cycle capture
                 startOfWave = i;
             }   
             oscCounter = 0;
@@ -411,7 +420,7 @@ void NonLinAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce:
         processSaturation(&nonLin[channel], channelData, bufferSize);
     }
 
-    //display wave:
+    //store wave from start of waveform, trigger visualisation when done:
     auto* channelDataX = buffer.getReadPointer(0);    
     if (cycleReady)  {
         for (int i = startOfWave; i < bufferSize; i++) {
@@ -471,10 +480,13 @@ void NonLinAudioProcessor::parameterChanged(const juce::String& parameterID, flo
 
     auto calcParam = [&](unsigned int block, unsigned int param) {
         auto val = nonLin[0].blockSettings[block][param];
+        auto type = nonLin[0].blockType[block];
         for (unsigned int knob = 0; knob < 4; knob++) {
             val += nonLin[0].uiValue[knob] * nonLin[0].matrixRange[block][knob][param];
         }
-        val = std::clamp<float>(val, 0.0f, 1.0f);
+        if (type != b_gain) {
+            val = std::clamp<float>(val, 0.0f, 1.0f);
+        }    
         nonLin[0].matrixFinalAmounts[block][param] = val;
         nonLin[1].matrixFinalAmounts[block][param] = val;
     };
@@ -871,13 +883,46 @@ void NonLinAudioProcessor::parameterChanged(const juce::String& parameterID, flo
     //================================================================
 
     else if (parameterID == "oversample") {
-    float mults[4] = { 1.f, 2.f, 4.f, 8.f };
-    nonLin[0].oversampleAmt = mults[(unsigned int)newValue - 1]; //could just use oversampleMult[s_upSample] ??
-    nonLin[1].oversampleAmt = nonLin[0].oversampleAmt;
+        std::array<float,4>  mults = { 1.f, 2.f, 4.f, 8.f };
+        nonLin[0].oversampleAmt = mults[(unsigned int)newValue - 1]; //could just use oversampleMult[s_upSample] ??
+        nonLin[1].oversampleAmt = nonLin[0].oversampleAmt;
         for (unsigned int i = s_upSample; i <= s_downSamp; i++) {
-            nonLin[0].oversampleMult[i] = mults[(unsigned int)newValue];
+            nonLin[0].oversampleMult[i] = mults[(unsigned int)newValue - 1];
             nonLin[1].oversampleMult[i] = nonLin[0].oversampleMult[i];
         }
+    }
+
+    else if (parameterID == "option1") {
+        nonLin[0].option[s_free4] = (unsigned int)newValue - 1;
+        nonLin[1].option[s_free4] = (unsigned int)newValue - 1;
+    }
+    else if (parameterID == "option2") {
+    nonLin[0].option[s_free5] = (unsigned int)newValue - 1;
+    nonLin[1].option[s_free5] = (unsigned int)newValue - 1;
+    }
+    else if (parameterID == "option3") {
+    nonLin[0].option[s_free6] = (unsigned int)newValue - 1;
+    nonLin[1].option[s_free6] = (unsigned int)newValue - 1;
+    }
+    else if (parameterID == "option4") {
+    nonLin[0].option[s_free7] = (unsigned int)newValue - 1;
+    nonLin[1].option[s_free7] = (unsigned int)newValue - 1;
+    }
+    else if (parameterID == "option5") {
+    nonLin[0].option[s_free8] = (unsigned int)newValue - 1;
+    nonLin[1].option[s_free8] = (unsigned int)newValue - 1;
+    }
+    else if (parameterID == "option6") {
+    nonLin[0].option[s_free9] = (unsigned int)newValue - 1;
+    nonLin[1].option[s_free9] = (unsigned int)newValue - 1;
+    }
+    else if (parameterID == "option7") {
+    nonLin[0].option[s_free10] = (unsigned int)newValue - 1;
+    nonLin[1].option[s_free10] = (unsigned int)newValue - 1;
+    }
+    else if (parameterID == "option8") {
+    nonLin[0].option[s_free11] = (unsigned int)newValue - 1;
+    nonLin[1].option[s_free11] = (unsigned int)newValue - 1;
     }
 
 }

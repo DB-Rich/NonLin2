@@ -182,6 +182,41 @@ NonLinAudioProcessorEditor::NonLinAudioProcessorEditor (NonLinAudioProcessor& p,
 
     const juce::StringArray defaultOptions("N/A", "N/A", "N/A", "N/A");
 
+    option1.addItemList(defaultOptions, 1);
+    option2.addItemList(defaultOptions, 1);
+    option3.addItemList(defaultOptions, 1);
+    option4.addItemList(defaultOptions, 1);
+    option5.addItemList(defaultOptions, 1);
+    option6.addItemList(defaultOptions, 1);
+    option7.addItemList(defaultOptions, 1);
+    option8.addItemList(defaultOptions, 1);
+
+    addAndMakeVisible(&option1);
+    option1.setSize(90, 30);
+    addAndMakeVisible(&option2);
+    option2.setSize(90, 30);
+    addAndMakeVisible(&option3);
+    option3.setSize(90, 30);
+    addAndMakeVisible(&option4);
+    option4.setSize(90, 30);
+    addAndMakeVisible(&option5);
+    option5.setSize(90, 30);
+    addAndMakeVisible(&option6);
+    option6.setSize(90, 30);
+    addAndMakeVisible(&option7);
+    option7.setSize(90, 30);
+    addAndMakeVisible(&option8);
+    option8.setSize(90, 30);
+
+    option1attachment.reset(new ComboBoxAttachment(valueTreeState, "option1", option1));
+    option2attachment.reset(new ComboBoxAttachment(valueTreeState, "option2", option2));
+    option3attachment.reset(new ComboBoxAttachment(valueTreeState, "option3", option3));
+    option4attachment.reset(new ComboBoxAttachment(valueTreeState, "option4", option4));
+    option5attachment.reset(new ComboBoxAttachment(valueTreeState, "option5", option5));
+    option6attachment.reset(new ComboBoxAttachment(valueTreeState, "option6", option6));
+    option7attachment.reset(new ComboBoxAttachment(valueTreeState, "option7", option7));
+    option8attachment.reset(new ComboBoxAttachment(valueTreeState, "option8", option8));
+
     auto changeOptions = [&](unsigned int slot, unsigned int type, juce::ComboBox * option) {
         setBlockType(&p.nonLin[0], slot, (enum blockTypes)type);    //set the type in the data model
         setBlockType(&p.nonLin[1], slot, (enum blockTypes)type);
@@ -189,7 +224,7 @@ NonLinAudioProcessorEditor::NonLinAudioProcessorEditor (NonLinAudioProcessor& p,
         const juce::StringArray gainOptions("Single", "Split", "N/A", "N/A");
         const juce::StringArray filterOptions("LP", "HP", "AP", "N/A");
         const juce::StringArray nonLinOptions("tanh", "softclip", "xxx");
-        const juce::StringArray offsetOptions("N/A", "N/A", "N/A", "N/A");
+        const juce::StringArray offsetOptions("Negative", "Positive", "N/A", "N/A");
         auto itemId = option->getSelectedId();       
         switch (type) {
         default:
@@ -254,41 +289,7 @@ NonLinAudioProcessorEditor::NonLinAudioProcessorEditor (NonLinAudioProcessor& p,
         auto val = slot8.getSelectedItemIndex();
         changeOptions(s_free11, val, &option8);
     };
- 
-    option1.addItemList(defaultOptions, 1);
-    option2.addItemList(defaultOptions, 1);
-    option3.addItemList(defaultOptions, 1);
-    option4.addItemList(defaultOptions, 1);
-    option5.addItemList(defaultOptions, 1);
-    option6.addItemList(defaultOptions, 1);
-    option7.addItemList(defaultOptions, 1);
-    option8.addItemList(defaultOptions, 1);
 
-    addAndMakeVisible(&option1);
-    option1.setSize(90, 30); 
-    addAndMakeVisible(&option2);
-    option2.setSize(90, 30);
-    addAndMakeVisible(&option3);
-    option3.setSize(90, 30);
-    addAndMakeVisible(&option4);
-    option4.setSize(90, 30);
-    addAndMakeVisible(&option5);
-    option5.setSize(90, 30);
-    addAndMakeVisible(&option6);
-    option6.setSize(90, 30);
-    addAndMakeVisible(&option7);
-    option7.setSize(90, 30);
-    addAndMakeVisible(&option8);
-    option8.setSize(90, 30);
-
-    option1attachment.reset(new ComboBoxAttachment(valueTreeState, "option1", option1));
-    option2attachment.reset(new ComboBoxAttachment(valueTreeState, "option2", option2));
-    option3attachment.reset(new ComboBoxAttachment(valueTreeState, "option3", option3));
-    option4attachment.reset(new ComboBoxAttachment(valueTreeState, "option4", option4));
-    option5attachment.reset(new ComboBoxAttachment(valueTreeState, "option5", option5));
-    option6attachment.reset(new ComboBoxAttachment(valueTreeState, "option6", option6));
-    option7attachment.reset(new ComboBoxAttachment(valueTreeState, "option7", option7));
-    option8attachment.reset(new ComboBoxAttachment(valueTreeState, "option7", option8));
 
     addAndMakeVisible(&U1AP1);
     addAndMakeVisible(&U1AP2);

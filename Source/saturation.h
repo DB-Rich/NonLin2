@@ -21,6 +21,18 @@ const enum filterParams {
     f_mix
 };
 
+const enum clipTypes {
+    c_tanh = 0,
+    c_softclip,
+    c_other
+};
+
+const enum offsetTypes {
+    o_negative = 0,
+    o_positive
+};
+
+
 const enum blockStages {
     s_inputGain = 0,
     s_lpf1,
@@ -51,6 +63,8 @@ struct nonLinFX {
     float matrixFinalAmounts[TOTAL_ASSIGNMEMTS][2]{ 0.0f }; // final values
     float matrixRange[TOTAL_ASSIGNMEMTS][NUM_PANEL_KNOBS][2]{ 0.0f }; // min range per assignment
     //float matrixSkew[TOTAL_ASSIGNMEMTS][2]{ 0.0f }; // log skew per assignment
+
+    unsigned int option[TOTAL_ASSIGNMEMTS]{ 0 };
 
     float oversampleMult[TOTAL_ASSIGNMEMTS]{ 1.0f };
     enum blockTypes blockType[TOTAL_ASSIGNMEMTS]{ blockTypes::b_none };

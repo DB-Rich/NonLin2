@@ -407,7 +407,7 @@
         FX->blockSettings[s_lpf2][f_frequency] = 20000.0f;
         FX->oversampleMult[s_lpf2] = FX->oversampleAmt;
 
-        //4-12 are user defined, running at oversample amount
+        //4-11 are user defined, running at oversample amount
         for (unsigned int i = s_freeStart; i < s_freeEnd; i++)  {
             FX->oversampleMult[i] = FX->oversampleAmt;
         }
@@ -484,6 +484,7 @@
         auto type = FX->blockType[blockID];
         auto param1 = FX->matrixFinalAmounts[blockID][0];
         auto param2 = FX->matrixFinalAmounts[blockID][1];
+        auto option = FX->option[blockID];
         switch (type) {
             case blockTypes::b_none: 
             break;
@@ -491,56 +492,64 @@
             case blockTypes::b_filter: { //process filter  { frequency, type, mix? }
                 juce::dsp::FirstOrderTPTFilter<float>* const filt = &FX->filter[blockID];
                 for (unsigned int i = 0; i < bufferSize; i++) {
-                  //  filt->processSample(0, channelData[i]); // DebUG - NOT SET COrreCtlY YeT ?
+                    channelData[i] = filt->processSample(0, channelData[i]); // DebUG - NOT SET COrreCtlY YeT ?
                 }
             }
             break;
             
             case blockTypes::b_nonLin: { //process assymetric clipping types  { gain, clip_symmetry, nonlintype }
-                auto softClipPos = param1 * 0.33f; //todo make gain / asym
-                auto softClipNeg = param2 * 0.33f; //todo apply a symetry control 0 = 0, 0.5 = 0.33, 1.0 = 0.33 (with opp at 0.0)
+                auto softClipPos = param1 * 0.33f; //amount
+                auto softClipNeg = softClipPos * (1.f - param2); // symmetry
+                auto makeup = (1.f + softClipPos);
                 for (unsigned int i = 0; i < bufferSize; i++) {
                     float in = channelData[i];
                     auto positive = (in > 0.0f) ? true : false;
+                    if (option == c_softclip) {
+                        if (positive) channelData[i] = fx_softclipf(softClipPos, in);
+                        else channelData[i] = fx_softclipf(softClipNeg, in);
+                        channelData[i] = channelData[i] * makeup;
+                    }
 
                     //TODO - other non lin types in here
-
-
-                    if (positive) {
-                        channelData[i] = fx_softclipf(softClipPos, in); // soft clip algo
-                    }
-                    else /*(negative)*/ {
-                        channelData[i] = fx_softclipf(softClipNeg, in); // soft clip algo
-                    }
+     
                 }
             }
             break;
 
             case blockTypes::b_gain: { // { gainPos, gainNeg }
-                auto gainA = param1;
-                auto gainB = param2;
+                auto gainA = param1 * 10.0f;
+                auto gainB = param2 * 10.0f;
+                
                 for (unsigned int i = 0; i < bufferSize; i++) {
                     if (channelData[i] > 0.0f) {
                         channelData[i] *= gainA; // apply gain
-                        //todo - want softclip?
+                        channelData[i] = fx_softclipf(0.05f, channelData[i]);
                     }
                     else /*(negative)*/ {
-                        channelData[i] *= gainB; // apply gain
-                        //todo - want softclip?
+                        if (option == 0)
+                            channelData[i] *= gainA;
+                        else
+                            channelData[i] *= gainB; // apply gain
+                        channelData[i] = fx_softclipf(0.05f, channelData[i]); // soft clip algo
                     }
                 }
             }
             break;
 
             case blockTypes::b_dcOffset: { // { offset, compensate_sw }
-                auto offset = param1; // todo make param [0.01, 1.0]
-                auto makeUp = 1.0f / (1.0f - offset);
+                auto offset = param1 * 0.5f; // todo make param [0.01, 1.0]
+                auto makeUp = 1.0f / (1.0f - offset); //  std::sqrtf(offset));
                 for (unsigned int i = 0; i < bufferSize; i++) {
-                    float in = channelData[i];
-                    auto positive = (in > 0.0f) ? true : false;
-                    in -= offset; // apply offset
-                    in = positive ? in * makeUp : in;  //compensate for gain 
-                    channelData[i] = fx_softclipf(0.1f, in); // soft clip
+                    float in = channelData[i]; 
+                    if (option == o_negative) {
+                        in -= offset; // apply offset    
+                        in = (in > 0.0f) ? in * makeUp : in;  //compensate for gain 
+                    }
+                    else {
+                        in += offset;
+                        in = (in < 0.0f) ? in * makeUp : in;
+                    }
+                    channelData[i] = fx_softclipf(0.1f, in);
                 }
             }
             break;
@@ -559,18 +568,18 @@
             //std::vector<float, oversampBufferSize> upSampBuffer;
             //processBlockByType(FX, channelData, bufferSize, s_inputGain);
             //processBlockByType(FX, channelData, bufferSize, s_lpf1);
-            //processBlockByTypeUpDown(FX, channelData, upSampBuffer, bufferSize, b_upSamp);
+            processBlockByTypeUpDown(FX, channelData, upSampBuffer, bufferSize, b_upSamp);
             //processBlockByType(FX, upSampBuffer, oversampBufferSize, s_lpf2);
 
-            ////non-lin sequence
-            //for (unsigned int i = s_freeStart; i < s_freeEnd; i++) {
-            //    auto type = FX->blockType[i];
-            //    if (type != b_none)
-            //        processBlockByType(FX, upSampBuffer, oversampBufferSize, i);
-            //}
-            ////downsample processing
+            //non-lin sequence
+            for (unsigned int i = s_freeStart; i < s_freeEnd; i++) {
+                auto type = FX->blockType[i];
+                if (type != b_none)
+                    processBlockByType(FX, upSampBuffer, oversampBufferSize, i);
+            }
+            //downsample processing
             //processBlockByType(FX, upSampBuffer, oversampBufferSize, s_lpfOut1);
-            //processBlockByTypeUpDown(FX, channelData, upSampBuffer, bufferSize, b_downSamp);
+            processBlockByTypeUpDown(FX, channelData, upSampBuffer, bufferSize, b_downSamp);
             //processBlockByType(FX, channelData, bufferSize, s_lpfOut2);
             //processBlockByType(FX, channelData, bufferSize, s_outGain);
         }
