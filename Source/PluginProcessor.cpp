@@ -60,8 +60,6 @@ NonLinAudioProcessor::NonLinAudioProcessor()
     std::make_unique<juce::AudioParameterInt>("slot7", "slot 7", 1, 5, 1),
     std::make_unique<juce::AudioParameterInt>("slot8", "slot 8", 1, 5, 1),
 
-    std::make_unique<juce::AudioParameterInt>("oversample", "oversample", 1, 4, 1),
-
     std::make_unique<juce::AudioParameterInt>("option1", "option 1", 1, 4, 1),
     std::make_unique<juce::AudioParameterInt>("option2", "option 2", 1, 4, 1),
     std::make_unique<juce::AudioParameterInt>("option3", "option 3", 1, 4, 1),
@@ -70,6 +68,8 @@ NonLinAudioProcessor::NonLinAudioProcessor()
     std::make_unique<juce::AudioParameterInt>("option6", "option 6", 1, 4, 1),
     std::make_unique<juce::AudioParameterInt>("option7", "option 7", 1, 4, 1),
     std::make_unique<juce::AudioParameterInt>("option8", "option 8", 1, 4, 1),
+
+    std::make_unique<juce::AudioParameterInt>("oversample", "oversample", 1, 4, 1),
 
     std::make_unique<juce::AudioParameterFloat>("U1AP1", "U1AP1", -100.f, 100.0f, 0.f),
     std::make_unique<juce::AudioParameterFloat>("U1AP2", "U1AP2", -100.f, 100.0f, 0.f),
@@ -377,17 +377,6 @@ void NonLinAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce:
     auto totalNumOutputChannels = getTotalNumOutputChannels();
     auto bufferSize = buffer.getNumSamples();
 
-    for (int i = s_freeStart; i < s_freeEnd; i++) {
-        if (nonLin[0].blockType[i] == b_filter) {
-            nonLin[0].filter[i].setType((juce::dsp::FirstOrderTPTFilterType)nonLin[0].option[i]);
-            nonLin[1].filter[i].setType((juce::dsp::FirstOrderTPTFilterType)nonLin[0].option[i]);
-            auto val = nonLin[0].matrixFinalAmounts[i][0];
-            auto freq = val * val * 20000.f + 40.f;
-            nonLin[0].filter[i].setCutoffFrequency(freq);
-            nonLin[1].filter[i].setCutoffFrequency(freq);
-        }
-    }
-
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, bufferSize);
 
@@ -486,6 +475,19 @@ void NonLinAudioProcessor::parameterChanged(const juce::String& parameterID, flo
         }    
         nonLin[0].matrixFinalAmounts[block][param] = val;
         nonLin[1].matrixFinalAmounts[block][param] = val;
+
+        if (nonLin[0].blockType[block] == b_filter) {
+            auto freq = val * val * 20000.f + 40.f;
+            nonLin[0].filter[block].setCutoffFrequency(freq);
+            nonLin[1].filter[block].setCutoffFrequency(freq);
+        }
+    };
+
+    auto setFilterType = [&](unsigned int block) {
+        if (nonLin[0].blockType[block] == b_filter) {
+            nonLin[0].filter[block].setType((juce::dsp::FirstOrderTPTFilterType)nonLin[0].option[block]);
+            nonLin[1].filter[block].setType((juce::dsp::FirstOrderTPTFilterType)nonLin[0].option[block]);
+        }
     };
 
     auto normValue = newValue * 0.01f;
@@ -881,63 +883,64 @@ void NonLinAudioProcessor::parameterChanged(const juce::String& parameterID, flo
 
     else if (parameterID == "oversample") {
         std::array<float,4>  mults = { 1.f, 2.f, 4.f, 8.f };
-        auto idx = (unsigned int)newValue - 1;
-        nonLin[0].oversampleAmt = mults[idx];
-        nonLin[1].oversampleAmt = nonLin[0].oversampleAmt;
+        auto oversampleMult = mults[(unsigned int)newValue - 1];
+        nonLin[0].oversampleAmt = oversampleMult;
+        nonLin[1].oversampleAmt = oversampleMult;
         for (unsigned int i = s_upSample; i <= s_downSamp; i++) {
-            nonLin[0].oversampleMult[i] = mults[idx];
-            nonLin[1].oversampleMult[i] = mults[idx];
+            nonLin[0].oversampleMult[i] = oversampleMult;
+            nonLin[1].oversampleMult[i] = oversampleMult;
         }
         for (unsigned int i = s_free4; i <= s_free11; i++) {
-            nonLin[0].procSpec[i].sampleRate = getSampleRate() * mults[idx];
+            nonLin[0].procSpec[i].sampleRate = getSampleRate() * oversampleMult;
             nonLin[0].procSpec[i].numChannels = 1;
-            nonLin[0].procSpec[i].maximumBlockSize = 4096 * 8;
-            nonLin[1].procSpec[i].sampleRate = getSampleRate() * mults[idx];
+            nonLin[0].procSpec[i].maximumBlockSize = 4096 * oversampleMult;
+            nonLin[1].procSpec[i].sampleRate = getSampleRate() * oversampleMult;
             nonLin[1].procSpec[i].numChannels = 1;
-            nonLin[1].procSpec[i].maximumBlockSize = 4096 * 8;
-
-            auto val = nonLin[0].matrixFinalAmounts[i][0];
-            auto freq = val * val * 20000.f + 40.f;
-            nonLin[0].filter[i].setCutoffFrequency(freq);
-            nonLin[1].filter[i].setCutoffFrequency(freq);
-
+            nonLin[1].procSpec[i].maximumBlockSize = 4096 * oversampleMult;
             nonLin[0].filter[i].prepare(nonLin[0].procSpec[i]);
             nonLin[1].filter[i].prepare(nonLin[1].procSpec[i]);
-
         }
     }
 
     else if (parameterID == "option1") {
         nonLin[0].option[s_free4] = (unsigned int)newValue - 1;
         nonLin[1].option[s_free4] = (unsigned int)newValue - 1;
+        setFilterType(s_free4);
     }
     else if (parameterID == "option2") {
     nonLin[0].option[s_free5] = (unsigned int)newValue - 1;
     nonLin[1].option[s_free5] = (unsigned int)newValue - 1;
+    setFilterType(s_free5);
     }
     else if (parameterID == "option3") {
     nonLin[0].option[s_free6] = (unsigned int)newValue - 1;
     nonLin[1].option[s_free6] = (unsigned int)newValue - 1;
+    setFilterType(s_free6);
     }
     else if (parameterID == "option4") {
     nonLin[0].option[s_free7] = (unsigned int)newValue - 1;
     nonLin[1].option[s_free7] = (unsigned int)newValue - 1;
+    setFilterType(s_free7);
     }
     else if (parameterID == "option5") {
     nonLin[0].option[s_free8] = (unsigned int)newValue - 1;
     nonLin[1].option[s_free8] = (unsigned int)newValue - 1;
+    setFilterType(s_free8);
     }
     else if (parameterID == "option6") {
     nonLin[0].option[s_free9] = (unsigned int)newValue - 1;
     nonLin[1].option[s_free9] = (unsigned int)newValue - 1;
+    setFilterType(s_free9);
     }
     else if (parameterID == "option7") {
     nonLin[0].option[s_free10] = (unsigned int)newValue - 1;
     nonLin[1].option[s_free10] = (unsigned int)newValue - 1;
+    setFilterType(s_free10);
     }
     else if (parameterID == "option8") {
     nonLin[0].option[s_free11] = (unsigned int)newValue - 1;
     nonLin[1].option[s_free11] = (unsigned int)newValue - 1;
+    setFilterType(s_free11);
     }
 
 }

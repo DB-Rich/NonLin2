@@ -374,16 +374,16 @@
     // dirtboxsynth - process block model
    // =======================================================================
 
-    //called from init()
-    void setFilter(nonLinFX* const FX, unsigned int blockId, double sampleRate, int samplesPerBlock) {
-        FX->procSpec[blockId].sampleRate = sampleRate * FX->oversampleMult[blockId];
-        FX->procSpec[blockId].numChannels = 1;
-        FX->procSpec[blockId].maximumBlockSize = samplesPerBlock * FX->oversampleMult[blockId];
-        FX->filter[blockId].prepare(FX->procSpec[blockId]);
-        FX->filter[blockId].setType(juce::dsp::FirstOrderTPTFilterType::lowpass);
-        FX->filter[blockId].setCutoffFrequency(FX->blockSettings[blockId][f_frequency]);
-       // FX->filter[blockId].reset(); // debug xheck order required
-    }
+    ////called from init()
+    //void setFilter(nonLinFX* const FX, unsigned int blockId, double sampleRate, int samplesPerBlock) {
+    //    FX->procSpec[blockId].sampleRate = sampleRate * FX->oversampleMult[blockId];
+    //    FX->procSpec[blockId].numChannels = 1;
+    //    FX->procSpec[blockId].maximumBlockSize = samplesPerBlock * FX->oversampleMult[blockId];
+    //    FX->filter[blockId].prepare(FX->procSpec[blockId]);
+    //    FX->filter[blockId].setType(juce::dsp::FirstOrderTPTFilterType::lowpass);
+    //    FX->filter[blockId].setCutoffFrequency(FX->blockSettings[blockId][f_frequency]);
+    //   // FX->filter[blockId].reset(); // debug xheck order required
+    //}
 
     //called from init()
     void setUpFixedBlocks(nonLinFX* const FX) {
@@ -505,6 +505,8 @@
                 auto softClipPos = param1 * 0.33f; //amount
                 auto softClipNeg = softClipPos * (1.f - param2); // symmetry
                 auto makeup = (1.f + softClipPos);
+                auto param1neg = 1.f - param1;
+                auto param2neg = 1.f - param2;
                 for (unsigned int i = 0; i < bufferSize; i++) {
                     float in = channelData[i];
                     auto positive = (in > 0.0f) ? true : false;
@@ -512,6 +514,11 @@
                         if (positive) channelData[i] = fx_softclipf(softClipPos, in);
                         else channelData[i] = fx_softclipf(softClipNeg, in);
                         channelData[i] = channelData[i] * makeup;
+                    }
+                    else if (option == c_tanh) {
+                        auto tanned = juce::dsp::FastMathApproximations::tanh(in);
+                        if (positive) channelData[i] = param1 * tanned + in * param1neg;
+                        else channelData[i] = param2 * tanned + in * param2neg;
                     }
 
                     //TODO - other non lin types in here
