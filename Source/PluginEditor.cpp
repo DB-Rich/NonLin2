@@ -290,6 +290,24 @@ NonLinAudioProcessorEditor::NonLinAudioProcessorEditor (NonLinAudioProcessor& p,
         changeOptions(s_free11, val, &option8);
     };
 
+    //for startup: will this work? yes!
+    auto val = slot1.getSelectedItemIndex(); 
+    changeOptions(s_free4, val, &option1);
+    val = slot2.getSelectedItemIndex();
+    changeOptions(s_free5, val, &option2);
+    val = slot3.getSelectedItemIndex();
+    changeOptions(s_free6, val, &option3);
+    val = slot4.getSelectedItemIndex();
+    changeOptions(s_free7, val, &option4);
+    val = slot5.getSelectedItemIndex();
+    changeOptions(s_free8, val, &option5);
+    val = slot6.getSelectedItemIndex();
+    changeOptions(s_free9, val, &option6);
+    val = slot7.getSelectedItemIndex();
+    changeOptions(s_free10, val, &option7);
+    val = slot8.getSelectedItemIndex();
+    changeOptions(s_free11, val, &option8);
+
 
     addAndMakeVisible(&U1AP1);
     addAndMakeVisible(&U1AP2);

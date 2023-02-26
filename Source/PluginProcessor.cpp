@@ -264,6 +264,7 @@ NonLinAudioProcessor::NonLinAudioProcessor()
 
 NonLinAudioProcessor::~NonLinAudioProcessor()
 {
+    //need to kill anything here?
 }
 
 //==============================================================================
@@ -378,19 +379,15 @@ void NonLinAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce:
 
     for (int i = s_freeStart; i < s_freeEnd; i++) {
         if (nonLin[0].blockType[i] == b_filter) {
-            nonLin[0].filter[i].setType()
-            auto freq = nonLin[0].matrixFinalAmounts[i][0] * 20000.f + 20.f;
+            nonLin[0].filter[i].setType((juce::dsp::FirstOrderTPTFilterType)nonLin[0].option[i]);
+            nonLin[1].filter[i].setType((juce::dsp::FirstOrderTPTFilterType)nonLin[0].option[i]);
+            auto val = nonLin[0].matrixFinalAmounts[i][0];
+            auto freq = val * val * 20000.f + 40.f;
             nonLin[0].filter[i].setCutoffFrequency(freq);
             nonLin[1].filter[i].setCutoffFrequency(freq);
         }
     }
 
-    // In case we have more outputs than inputs, this code clears any output
-    // channels that didn't contain input data, (because these aren't
-    // guaranteed to be empty - they may contain garbage).
-    // This is here to avoid people getting screaming feedback
-    // when they first compile a plugin, but obviously you don't need to keep
-    // this code if your algorithm always overwrites all the output channels.
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, bufferSize);
 
@@ -884,11 +881,29 @@ void NonLinAudioProcessor::parameterChanged(const juce::String& parameterID, flo
 
     else if (parameterID == "oversample") {
         std::array<float,4>  mults = { 1.f, 2.f, 4.f, 8.f };
-        nonLin[0].oversampleAmt = mults[(unsigned int)newValue - 1]; //could just use oversampleMult[s_upSample] ??
+        auto idx = (unsigned int)newValue - 1;
+        nonLin[0].oversampleAmt = mults[idx];
         nonLin[1].oversampleAmt = nonLin[0].oversampleAmt;
         for (unsigned int i = s_upSample; i <= s_downSamp; i++) {
-            nonLin[0].oversampleMult[i] = mults[(unsigned int)newValue - 1];
-            nonLin[1].oversampleMult[i] = nonLin[0].oversampleMult[i];
+            nonLin[0].oversampleMult[i] = mults[idx];
+            nonLin[1].oversampleMult[i] = mults[idx];
+        }
+        for (unsigned int i = s_free4; i <= s_free11; i++) {
+            nonLin[0].procSpec[i].sampleRate = getSampleRate() * mults[idx];
+            nonLin[0].procSpec[i].numChannels = 1;
+            nonLin[0].procSpec[i].maximumBlockSize = 4096 * 8;
+            nonLin[1].procSpec[i].sampleRate = getSampleRate() * mults[idx];
+            nonLin[1].procSpec[i].numChannels = 1;
+            nonLin[1].procSpec[i].maximumBlockSize = 4096 * 8;
+
+            auto val = nonLin[0].matrixFinalAmounts[i][0];
+            auto freq = val * val * 20000.f + 40.f;
+            nonLin[0].filter[i].setCutoffFrequency(freq);
+            nonLin[1].filter[i].setCutoffFrequency(freq);
+
+            nonLin[0].filter[i].prepare(nonLin[0].procSpec[i]);
+            nonLin[1].filter[i].prepare(nonLin[1].procSpec[i]);
+
         }
     }
 

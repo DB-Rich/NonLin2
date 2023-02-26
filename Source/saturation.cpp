@@ -380,7 +380,7 @@
         FX->procSpec[blockId].numChannels = 1;
         FX->procSpec[blockId].maximumBlockSize = samplesPerBlock * FX->oversampleMult[blockId];
         FX->filter[blockId].prepare(FX->procSpec[blockId]);
-        FX->filter[blockId].setType(FX->filterType[blockId]);
+        FX->filter[blockId].setType(juce::dsp::FirstOrderTPTFilterType::lowpass);
         FX->filter[blockId].setCutoffFrequency(FX->blockSettings[blockId][f_frequency]);
        // FX->filter[blockId].reset(); // debug xheck order required
     }
@@ -396,6 +396,7 @@
         //filter:
         FX->blockType[s_lpf1] = b_filter;
         FX->blockSettings[s_lpf1][f_frequency] = 20000.0f;
+       // FX->filterType[s_lpf1] = juce::dsp::FirstOrderTPTFilterType::lowpass;
         FX->oversampleMult[s_lpf1] = 1.0f;
 
         //oversample:
@@ -410,6 +411,7 @@
         //4-11 are user defined, running at oversample amount
         for (unsigned int i = s_freeStart; i < s_freeEnd; i++)  {
             FX->oversampleMult[i] = FX->oversampleAmt;
+            //FX->filterType[i] = juce::dsp::FirstOrderTPTFilterType::lowpass;
         }
 
         //filter:
@@ -425,6 +427,7 @@
         FX->blockType[s_lpfOut2] = b_filter;
         FX->blockSettings[s_lpfOut2][f_frequency] = 20000.0f;
         FX->oversampleMult[s_lpfOut2] = 1.0f;
+        //FX->filterType[s_lpf1] = juce::dsp::FirstOrderTPTFilterType::lowpass;
 
         //out gain:
         FX->blockType[s_outGain] = b_gain;
@@ -436,16 +439,17 @@
     void initSaturation(nonLinFX* const FX, double sampleRate, int samplesPerBlock) {
 
         setUpFixedBlocks(FX); //in/out gain, filters, up/down sampling
-
+        FX->upSampBuffer.setSize(1, 4096 * 8);
+        //auto overSampleRate = 
         // init filters:
-        for (unsigned int i = 0; i < 16; i++) {
-            if (FX->blockType[i] == b_filter) {
-                setFilter(FX, i, sampleRate, samplesPerBlock);
-            }
-        }
+        //for (unsigned int i = 0; i < 16; i++) {
+        //    if (FX->blockType[i] == b_filter) {
+        //        setFilter(FX, i, sampleRate, samplesPerBlock);
+        //    }
+        //}
     }
 
-    void processBlockByTypeUpDown(nonLinFX* const FX, float* const channelData, float* const channelOutData, unsigned int bufferSize, enum blockTypes type) {
+    void processBlockUpDown(nonLinFX* const FX, float* const channelData, float* const channelOutData, unsigned int bufferSize, enum blockTypes type) {
         switch (type) {
         case blockTypes::b_upSamp: {
             const auto mult = (unsigned int)FX->oversampleAmt; // get multiplier
@@ -471,7 +475,7 @@
             auto mult = (unsigned int)FX->oversampleAmt; // get multiplier
             for (unsigned int i = 0; i < bufferSize; i++) {
                 auto newIdx = i * mult;            //get oversample idx 
-                channelData[i] = channelOutData[newIdx]; // get sample at oversample idx
+                channelOutData[i] = channelData[newIdx]; // get sample at oversample idx
             }
         }
         break;
@@ -492,7 +496,7 @@
             case blockTypes::b_filter: { //process filter  { frequency, type, mix? }
                 juce::dsp::FirstOrderTPTFilter<float>* const filt = &FX->filter[blockID];
                 for (unsigned int i = 0; i < bufferSize; i++) {
-                    channelData[i] = filt->processSample(0, channelData[i]); // DebUG - NOT SET COrreCtlY YeT ?
+                    channelData[i] = filt->processSample(0, channelData[i]);
                 }
             }
             break;
@@ -563,23 +567,20 @@
     void processSaturation(nonLinFX* const FX, float* channelData, unsigned int bufferSize) {
         if (FX->oversampleAmt > 1.0f)  {
             const auto oversampBufferSize = (unsigned int)((float)bufferSize * FX->oversampleAmt);
-            float upSampBuffer[4096] = {};   //todo - make dynamic  
-            //std::array<float, 2048> upSampBuffer;
-            //std::vector<float, oversampBufferSize> upSampBuffer;
             //processBlockByType(FX, channelData, bufferSize, s_inputGain);
             //processBlockByType(FX, channelData, bufferSize, s_lpf1);
-            processBlockByTypeUpDown(FX, channelData, upSampBuffer, bufferSize, b_upSamp);
+            processBlockUpDown(FX, channelData, FX->upSampBuffer.getWritePointer(0), bufferSize, b_upSamp);
             //processBlockByType(FX, upSampBuffer, oversampBufferSize, s_lpf2);
 
             //non-lin sequence
             for (unsigned int i = s_freeStart; i < s_freeEnd; i++) {
                 auto type = FX->blockType[i];
                 if (type != b_none)
-                    processBlockByType(FX, upSampBuffer, oversampBufferSize, i);
+                    processBlockByType(FX, FX->upSampBuffer.getWritePointer(0), oversampBufferSize, i);
             }
             //downsample processing
             //processBlockByType(FX, upSampBuffer, oversampBufferSize, s_lpfOut1);
-            processBlockByTypeUpDown(FX, channelData, upSampBuffer, bufferSize, b_downSamp);
+            processBlockUpDown(FX, FX->upSampBuffer.getWritePointer(0), channelData, bufferSize, b_downSamp);
             //processBlockByType(FX, channelData, bufferSize, s_lpfOut2);
             //processBlockByType(FX, channelData, bufferSize, s_outGain);
         }
@@ -602,17 +603,6 @@
         fx->blockType[block] = type;
     };
 
-    void setFilterType(nonLinFX* const fx, unsigned int block, juce::dsp::FirstOrderTPTFilterType type) {
-        fx->filterType[block] = type;
-    };
-
-    //void setBlockValue(nonLinFX* fx, unsigned int block, unsigned int param, float amt) {
-//    fx->blockSettings[block][param] = amt;
-//};
-//void setBlockOversample(nonLinFX* const fx, unsigned int block, float overSamp) {
-//    fx->oversampleMult[block] = overSamp;
-//};
-// 
 //#ifdef __cplusplus
 //}
 //#endif 

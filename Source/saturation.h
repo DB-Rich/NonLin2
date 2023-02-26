@@ -68,17 +68,14 @@ struct nonLinFX {
 
     float oversampleMult[TOTAL_ASSIGNMEMTS]{ 1.0f };
     enum blockTypes blockType[TOTAL_ASSIGNMEMTS]{ blockTypes::b_none };
-    float oversampleAmt = 1.0f;        // todo - make param 1,2,4,8    
-    float prevBlockSample = 0.0f;       // oversample memory
-    juce::dsp::FirstOrderTPTFilterType filterType[TOTAL_ASSIGNMEMTS];
-    juce::dsp::FirstOrderTPTFilter<float> filter[TOTAL_ASSIGNMEMTS]; // up to 16 filters, and associated spec's
-    juce::dsp::ProcessSpec procSpec[TOTAL_ASSIGNMEMTS];
+    float oversampleAmt = 1.0f;
+    float prevBlockSample = 0.0f;
+    std::array<juce::dsp::FirstOrderTPTFilter<float>, TOTAL_ASSIGNMEMTS> filter; // up to 16 filters, and associated spec's
+    std::array<juce::dsp::ProcessSpec, TOTAL_ASSIGNMEMTS> procSpec;
+   // std::array<float, 4096 * 8> upSampBuffer;   //todo - make dynamic  ?
+    juce::AudioBuffer<float> upSampBuffer;
 }; 
 
 void setBlockType(nonLinFX* fx, unsigned int block, enum blockTypes type);
-void setBlockValue (nonLinFX * fx, unsigned int block, unsigned int param, float amt);
-void setBlockOversample(nonLinFX* const fx, unsigned int block, float overSamp);
-void setFilterType(nonLinFX* const fx, unsigned int block, juce::dsp::FirstOrderTPTFilterType type);
-
 void processSaturation(nonLinFX* const FX, float* channelData, unsigned int bufferSize);
 void initSaturation(nonLinFX* const FX, double sampleRate, int samplesPerBlock);
