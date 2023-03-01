@@ -449,23 +449,21 @@
         //}
     }
 
-    void processBlockUpDown(nonLinFX* const FX, float* const channelData, float* const channelOutData, unsigned int bufferSize, enum blockTypes type) {
+    void processBlockUpDown(nonLinFX* const FX, float const * channelData, float* const channelOutData, unsigned int bufferSize, enum blockTypes type) {
         switch (type) {
         case blockTypes::b_upSamp: {
             const auto mult = (unsigned int)FX->oversampleAmt; // get multiplier
             //first sample
-            auto diff = channelData[0] - FX->prevBlockSample; // get difference for this vs last
+            auto diff = (channelData[0] - FX->prevBlockSample) / FX->oversampleAmt; // get difference for this vs last div oversample amt
             for (unsigned int j = 0; j < mult; j++) { // for each oversample                                   
-                channelOutData[j] = FX->prevBlockSample + diff; // assign interpolated data difference
-                diff = diff + diff; // get next interp difference
+                channelOutData[j] = FX->prevBlockSample + diff * (float)j; // assign interpolated data difference
             }
             // for each sample after first
             for (unsigned int i = 1; i < bufferSize; i++) { 
                 auto idxOffset = i * mult;
-                diff = channelData[i] - channelData[i - 1]; // get difference
-                for (unsigned int j = 0; j < mult; j++) { // for each oversample                                
-                    channelOutData[idxOffset + j] = channelData[i - 1] + diff; // assign interpolated data difference
-                    diff = diff + diff; // get next interp difference
+                diff = (channelData[i] - channelData[i - 1]) / FX->oversampleAmt;
+                for (unsigned int j = 0; j < mult; j++) {                             
+                    channelOutData[idxOffset + j] = channelData[i - 1] + diff * (float)j;
                 }
             }
             FX->prevBlockSample = channelData[bufferSize - 1];
@@ -485,10 +483,10 @@
     }
 
     void processBlockByType(nonLinFX* const FX, float* const channelData, unsigned int bufferSize, unsigned int blockID) {
-        auto type = FX->blockType[blockID];
-        auto param1 = FX->matrixFinalAmounts[blockID][0];
-        auto param2 = FX->matrixFinalAmounts[blockID][1];
-        auto option = FX->option[blockID];
+        const auto type = FX->blockType[blockID];
+        const auto param1 = FX->matrixFinalAmounts[blockID][0];
+        const auto param2 = FX->matrixFinalAmounts[blockID][1];
+        const auto option = FX->option[blockID];
         switch (type) {
             case blockTypes::b_none: 
             break;

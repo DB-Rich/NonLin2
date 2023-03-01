@@ -882,7 +882,7 @@ void NonLinAudioProcessor::parameterChanged(const juce::String& parameterID, flo
     //================================================================
 
     else if (parameterID == "oversample") {
-        std::array<float,4>  mults = { 1.f, 2.f, 4.f, 8.f };
+        std::array<float,4>  mults = { 1.f, 2.f, 4.f, 6.f };
         auto oversampleMult = mults[(unsigned int)newValue - 1];
         nonLin[0].oversampleAmt = oversampleMult;
         nonLin[1].oversampleAmt = oversampleMult;

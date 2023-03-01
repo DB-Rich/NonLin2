@@ -174,7 +174,7 @@ NonLinAudioProcessorEditor::NonLinAudioProcessorEditor (NonLinAudioProcessor& p,
     slot8attachment.reset(new ComboBoxAttachment(valueTreeState, "slot8", slot8));
 
 
-    const juce::StringArray overSampAmt("1x", "2x", "4x", "8x");
+    const juce::StringArray overSampAmt("1x", "2x", "4x", "6x");
     oversample.addItemList(overSampAmt, 1);  
     addAndMakeVisible(&oversample);
     oversample.setSize(90, 30);
