@@ -31,7 +31,7 @@
 
     /** Clip upper bound of x to 1.f (inclusive) */
     float clip1f(const float x) {
-        return (((x) > 1.f) ? 1.f : (x));
+        return (x > 1.f) ? 1.f : (x);
     }
 
     /** Absolute value
@@ -66,9 +66,24 @@
         return x0 + tmp * (x1 - x0);
     }
 
+    /**
+      * Soft clip
+      *
+      * @param   c  Coefficient in [0, 1/3].
+      * @param   x  Value in (-inf, +inf).
+      * @return     Clipped value in [-(1-c), (1-c)].
+      */
+      /*__fast_inline*/
+    float fx_softclipf(const float c, float x)
+    {
+        x = clip1m1f(x);
+        return x - c * (x * x * x);
+    }
+
 
     //=============================================================
-
+    
+    //sine
 
     //#define k_wt_sine_size_exp     (7)
     //#define k_wt_sine_size         (1U<<k_wt_sine_size_exp)
@@ -246,19 +261,9 @@
     //     */
     //
     //
-         /**
-          * Soft clip
-          *
-          * @param   c  Coefficient in [0, 1/3].
-          * @param   x  Value in (-inf, +inf).
-          * @return     Clipped value in [-(1-c), (1-c)].
-          */
-    /*__fast_inline*/ 
-    float fx_softclipf(const float c, float x)
-    {
-        x = clip1m1f(x);
-        return x - c * (x * x * x);
-    }
+         
+    //Cubic saturation
+
     //
     //#define k_cubicsat_size_exp  (7)
     //#define k_cubicsat_size      (1U<<k_cubicsat_size_exp)
@@ -438,15 +443,8 @@
     //called from prepareToPlay():
     void initSaturation(nonLinFX* const FX, double sampleRate, int samplesPerBlock) {
 
-        setUpFixedBlocks(FX); //in/out gain, filters, up/down sampling
+        setUpFixedBlocks(FX);                   //in/out gain, filters, up/down sampling
         FX->upSampBuffer.setSize(1, 4096 * 8);
-        //auto overSampleRate = 
-        // init filters:
-        //for (unsigned int i = 0; i < 16; i++) {
-        //    if (FX->blockType[i] == b_filter) {
-        //        setFilter(FX, i, sampleRate, samplesPerBlock);
-        //    }
-        //}
     }
 
     void processBlockUpDown(nonLinFX* const FX, float const * channelData, float* const channelOutData, unsigned int bufferSize, enum blockTypes type) {
@@ -575,7 +573,7 @@
             //processBlockByType(FX, channelData, bufferSize, s_inputGain);
             //processBlockByType(FX, channelData, bufferSize, s_lpf1);
             processBlockUpDown(FX, channelData, FX->upSampBuffer.getWritePointer(0), bufferSize, b_upSamp);
-            //processBlockByType(FX, upSampBuffer, oversampBufferSize, s_lpf2);
+            processBlockByType(FX, FX->upSampBuffer.getWritePointer(0), oversampBufferSize, s_lpf2);
 
             //non-lin sequence
             for (unsigned int i = s_freeStart; i < s_freeEnd; i++) {

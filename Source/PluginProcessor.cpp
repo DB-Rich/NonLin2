@@ -29,6 +29,15 @@ NonLinAudioProcessor::NonLinAudioProcessor()
     // parameterID, parameter name,  minimum value, maximum value, default value 
     // must add here if have made an attachment
 
+    std::make_unique<juce::AudioParameterInt>("slot1", "slot 1", 1, 5, 1),
+    std::make_unique<juce::AudioParameterInt>("slot2", "slot 2", 1, 5, 1),
+    std::make_unique<juce::AudioParameterInt>("slot3", "slot 3", 1, 5, 1),
+    std::make_unique<juce::AudioParameterInt>("slot4", "slot 4", 1, 5, 1),
+    std::make_unique<juce::AudioParameterInt>("slot5", "slot 5", 1, 5, 1),
+    std::make_unique<juce::AudioParameterInt>("slot6", "slot 6", 1, 5, 1),
+    std::make_unique<juce::AudioParameterInt>("slot7", "slot 7", 1, 5, 1),
+    std::make_unique<juce::AudioParameterInt>("slot8", "slot 8", 1, 5, 1),
+
     std::make_unique<juce::AudioParameterFloat>("parama1", "Param A1", 0.f, 100.0f, 0.f),
     std::make_unique<juce::AudioParameterFloat>("parama2", "Param A2", 0.f, 100.0f, 0.f),
     std::make_unique<juce::AudioParameterFloat>("paramb1", "Param B1", 0.f, 100.0f, 0.f),
@@ -51,14 +60,7 @@ NonLinAudioProcessor::NonLinAudioProcessor()
     std::make_unique<juce::AudioParameterFloat>("ui3", "UI3", 0.f, 100.0f, 50.f),
     std::make_unique<juce::AudioParameterFloat>("ui4", "UI4", 0.f, 100.0f, 50.f),
 
-    std::make_unique<juce::AudioParameterInt>("slot1", "slot 1", 1, 5, 1), //DEBUG - correct to start at 1 ?
-    std::make_unique<juce::AudioParameterInt>("slot2", "slot 2", 1, 5, 1),
-    std::make_unique<juce::AudioParameterInt>("slot3", "slot 3", 1, 5, 1),
-    std::make_unique<juce::AudioParameterInt>("slot4", "slot 4", 1, 5, 1),
-    std::make_unique<juce::AudioParameterInt>("slot5", "slot 5", 1, 5, 1),
-    std::make_unique<juce::AudioParameterInt>("slot6", "slot 6", 1, 5, 1),
-    std::make_unique<juce::AudioParameterInt>("slot7", "slot 7", 1, 5, 1),
-    std::make_unique<juce::AudioParameterInt>("slot8", "slot 8", 1, 5, 1),
+
 
     std::make_unique<juce::AudioParameterInt>("option1", "option 1", 1, 4, 1),
     std::make_unique<juce::AudioParameterInt>("option2", "option 2", 1, 4, 1),
@@ -464,6 +466,8 @@ juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 
 void NonLinAudioProcessor::parameterChanged(const juce::String& parameterID, float newValue) {
 
+    //beware - on startup, it calls this before calling the editor constructor
+
     auto calcParam = [&](unsigned int block, unsigned int param) {
         auto val = nonLin[0].blockSettings[block][param];
         auto type = nonLin[0].blockType[block];
@@ -476,7 +480,7 @@ void NonLinAudioProcessor::parameterChanged(const juce::String& parameterID, flo
         nonLin[0].matrixFinalAmounts[block][param] = val;
         nonLin[1].matrixFinalAmounts[block][param] = val;
 
-        if (nonLin[0].blockType[block] == b_filter) {
+        if (nonLin[0].blockType[block] == b_filter && param == 0) {
             auto freq = val * val * 20000.f + 40.f;
             nonLin[0].filter[block].setCutoffFrequency(freq);
             nonLin[1].filter[block].setCutoffFrequency(freq);
@@ -487,12 +491,52 @@ void NonLinAudioProcessor::parameterChanged(const juce::String& parameterID, flo
         if (nonLin[0].blockType[block] == b_filter) {
             nonLin[0].filter[block].setType((juce::dsp::FirstOrderTPTFilterType)nonLin[0].option[block]);
             nonLin[1].filter[block].setType((juce::dsp::FirstOrderTPTFilterType)nonLin[0].option[block]);
+            auto val = nonLin[0].matrixFinalAmounts[block][0];
+            auto freq = val * val * 20000.f + 40.f;
+            nonLin[0].filter[block].setCutoffFrequency(freq);
+            nonLin[1].filter[block].setCutoffFrequency(freq);
         }
     };
 
     auto normValue = newValue * 0.01f;
+    auto comboValue = (unsigned int)newValue - 1;
 
-    if (parameterID == "ui1") {
+    if (parameterID == "slot1") {
+        setBlockType(&nonLin[0], s_free4, (blockTypes)comboValue);    //set the type in the data model
+        setBlockType(&nonLin[1], s_free4, (blockTypes)comboValue);
+    }
+    else if (parameterID == "slot2") {
+        setBlockType(&nonLin[0], s_free5, (blockTypes)comboValue);
+        setBlockType(&nonLin[1], s_free5, (blockTypes)comboValue);
+    }
+    else if (parameterID == "slot3") {
+        setBlockType(&nonLin[0], s_free6, (blockTypes)comboValue);
+        setBlockType(&nonLin[1], s_free6, (blockTypes)comboValue);
+    }
+    else if (parameterID == "slot4") {
+        setBlockType(&nonLin[0], s_free7, (blockTypes)comboValue);
+        setBlockType(&nonLin[1], s_free7, (blockTypes)comboValue);
+    }
+    else if (parameterID == "slot5") {
+        setBlockType(&nonLin[0], s_free8, (blockTypes)comboValue);
+        setBlockType(&nonLin[1], s_free8, (blockTypes)comboValue);
+    }
+    else if (parameterID == "slot6") {
+        setBlockType(&nonLin[0], s_free9, (blockTypes)comboValue);
+        setBlockType(&nonLin[1], s_free9, (blockTypes)comboValue);
+    }
+    else if (parameterID == "slot7") {
+        setBlockType(&nonLin[0], s_free10, (blockTypes)comboValue);
+        setBlockType(&nonLin[1], s_free10, (blockTypes)comboValue);
+    }
+    else if (parameterID == "slot8") {
+        setBlockType(&nonLin[0], s_free11, (blockTypes)comboValue);
+        setBlockType(&nonLin[1], s_free11, (blockTypes)comboValue);
+    }
+
+
+
+    else if (parameterID == "ui1") {
         nonLin[0].uiValue[0] = normValue;
         for (unsigned int  i = s_freeStart; i <= s_freeEnd; i++) {
             calcParam(i, 0); 

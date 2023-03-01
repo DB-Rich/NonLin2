@@ -24,6 +24,44 @@ NonLinAudioProcessorEditor::NonLinAudioProcessorEditor (NonLinAudioProcessor& p,
     auto largeWidgetSize = 95;
     auto smallWidgetSize = 50;
 
+    //beware - on startup, it calls param change before calling this !
+
+    addAndMakeVisible(&slot1);
+    addAndMakeVisible(&slot2);
+    addAndMakeVisible(&slot3);
+    addAndMakeVisible(&slot4);
+    addAndMakeVisible(&slot5);
+    addAndMakeVisible(&slot6);
+    addAndMakeVisible(&slot7);
+    addAndMakeVisible(&slot8);
+    slot1.setSize(90, 30);
+    slot2.setSize(90, 30);
+    slot3.setSize(90, 30);
+    slot4.setSize(90, 30);
+    slot5.setSize(90, 30);
+    slot6.setSize(90, 30);
+    slot7.setSize(90, 30);
+    slot8.setSize(90, 30);
+
+    const juce::StringArray blockTypes("None", "Gain", "Filter", "Shape", "Offset");
+    slot1.addItemList(blockTypes, 1);
+    slot2.addItemList(blockTypes, 1);
+    slot3.addItemList(blockTypes, 1);
+    slot4.addItemList(blockTypes, 1);
+    slot5.addItemList(blockTypes, 1);
+    slot6.addItemList(blockTypes, 1);
+    slot7.addItemList(blockTypes, 1);
+    slot8.addItemList(blockTypes, 1);
+
+    slot1attachment.reset(new ComboBoxAttachment(valueTreeState, "slot1", slot1));
+    slot2attachment.reset(new ComboBoxAttachment(valueTreeState, "slot2", slot2));
+    slot3attachment.reset(new ComboBoxAttachment(valueTreeState, "slot3", slot3));
+    slot4attachment.reset(new ComboBoxAttachment(valueTreeState, "slot4", slot4));
+    slot5attachment.reset(new ComboBoxAttachment(valueTreeState, "slot5", slot5));
+    slot6attachment.reset(new ComboBoxAttachment(valueTreeState, "slot6", slot6));
+    slot7attachment.reset(new ComboBoxAttachment(valueTreeState, "slot7", slot7));
+    slot8attachment.reset(new ComboBoxAttachment(valueTreeState, "slot8", slot8));
+
     addAndMakeVisible(&UI1);
     addAndMakeVisible(&UI2);
     addAndMakeVisible(&UI3);
@@ -137,41 +175,7 @@ NonLinAudioProcessorEditor::NonLinAudioProcessorEditor (NonLinAudioProcessor& p,
 
     //=====================================================================
 
-    addAndMakeVisible(&slot1);
-    addAndMakeVisible(&slot2);
-    addAndMakeVisible(&slot3);
-    addAndMakeVisible(&slot4);
-    addAndMakeVisible(&slot5);
-    addAndMakeVisible(&slot6);
-    addAndMakeVisible(&slot7);
-    addAndMakeVisible(&slot8);
-    slot1.setSize(90, 30);
-    slot2.setSize(90, 30);
-    slot3.setSize(90, 30);
-    slot4.setSize(90, 30);
-    slot5.setSize(90, 30);
-    slot6.setSize(90, 30);
-    slot7.setSize(90, 30);
-    slot8.setSize(90, 30);
 
-    const juce::StringArray blockTypes("None", "Gain", "Filter", "Shape", "Offset");
-    slot1.addItemList(blockTypes, 1);
-    slot2.addItemList(blockTypes, 1);
-    slot3.addItemList(blockTypes, 1);
-    slot4.addItemList(blockTypes, 1);
-    slot5.addItemList(blockTypes, 1);
-    slot6.addItemList(blockTypes, 1);
-    slot7.addItemList(blockTypes, 1);
-    slot8.addItemList(blockTypes, 1);
-
-    slot1attachment.reset(new ComboBoxAttachment(valueTreeState, "slot1", slot1));
-    slot2attachment.reset(new ComboBoxAttachment(valueTreeState, "slot2", slot2));
-    slot3attachment.reset(new ComboBoxAttachment(valueTreeState, "slot3", slot3));
-    slot4attachment.reset(new ComboBoxAttachment(valueTreeState, "slot4", slot4));
-    slot5attachment.reset(new ComboBoxAttachment(valueTreeState, "slot5", slot5));
-    slot6attachment.reset(new ComboBoxAttachment(valueTreeState, "slot6", slot6));
-    slot7attachment.reset(new ComboBoxAttachment(valueTreeState, "slot7", slot7));
-    slot8attachment.reset(new ComboBoxAttachment(valueTreeState, "slot8", slot8));
 
 
     const juce::StringArray overSampAmt("1x", "2x", "4x", "6x");
