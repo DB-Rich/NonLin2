@@ -62,6 +62,11 @@ NonLinAudioProcessorEditor::NonLinAudioProcessorEditor (NonLinAudioProcessor& p,
     slot7attachment.reset(new ComboBoxAttachment(valueTreeState, "slot7", slot7));
     slot8attachment.reset(new ComboBoxAttachment(valueTreeState, "slot8", slot8));
 
+    const juce::StringArray modes("Play", "Capture", "Analyse");  
+    mode.addItemList(modes, 1);
+    addAndMakeVisible(&mode);
+    slot8attachment.reset(new ComboBoxAttachment(valueTreeState, "mode", mode));
+
     addAndMakeVisible(&UI1);
     addAndMakeVisible(&UI2);
     addAndMakeVisible(&UI3);
@@ -178,7 +183,7 @@ NonLinAudioProcessorEditor::NonLinAudioProcessorEditor (NonLinAudioProcessor& p,
 
 
 
-    const juce::StringArray overSampAmt("1x", "2x", "4x", "6x");
+    const juce::StringArray overSampAmt("1x", "2x", "4x", "8x");
     oversample.addItemList(overSampAmt, 1);  
     addAndMakeVisible(&oversample);
     oversample.setSize(90, 30);
@@ -823,4 +828,6 @@ void NonLinAudioProcessorEditor::resized()
     oversample.setBounds(5, 15, wid, height);
 
     waveViewer.setBounds(100, 5, 200, 100);
+
+    mode.setBounds(300, 5, 70, 30);
 }

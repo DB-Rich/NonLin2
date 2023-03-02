@@ -174,6 +174,9 @@ private:
     juce::ComboBox oversample;
     std::unique_ptr<ComboBoxAttachment> oversampleattachment;
 
+    juce::ComboBox mode;
+    std::unique_ptr<ComboBoxAttachment> modeattachment;
+
     juce::ComboBox option1;
     juce::ComboBox option2;
     juce::ComboBox option3;

@@ -26,12 +26,12 @@
 
     float clip1m1f(const float x)
     {
-        return (((x) > 1.f) ? 1.f : ((x) < -1.f) ? -1.f : (x));
+        return (x > 1.f) ? 1.f : (x < -1.f) ? -1.f : x;
     }
 
     /** Clip upper bound of x to 1.f (inclusive) */
     float clip1f(const float x) {
-        return (x > 1.f) ? 1.f : (x);
+        return (x > 1.f) ? 1.f : x;
     }
 
     /** Absolute value
@@ -570,8 +570,8 @@
     void processSaturation(nonLinFX* const FX, float* channelData, unsigned int bufferSize) {
         if (FX->oversampleAmt > 1.0f)  {
             const auto oversampBufferSize = (unsigned int)((float)bufferSize * FX->oversampleAmt);
-            //processBlockByType(FX, channelData, bufferSize, s_inputGain);
-            //processBlockByType(FX, channelData, bufferSize, s_lpf1);
+            //processBlockByType(FX, channelData, bufferSize, s_inputGain); // DEBUG - this causes silence - not needed anyway?
+            processBlockByType(FX, channelData, bufferSize, s_lpf1);
             processBlockUpDown(FX, channelData, FX->upSampBuffer.getWritePointer(0), bufferSize, b_upSamp);
             processBlockByType(FX, FX->upSampBuffer.getWritePointer(0), oversampBufferSize, s_lpf2);
 
@@ -582,24 +582,23 @@
                     processBlockByType(FX, FX->upSampBuffer.getWritePointer(0), oversampBufferSize, i);
             }
             //downsample processing
-            //processBlockByType(FX, upSampBuffer, oversampBufferSize, s_lpfOut1);
+            processBlockByType(FX, FX->upSampBuffer.getWritePointer(0), oversampBufferSize, s_lpfOut1);
             processBlockUpDown(FX, FX->upSampBuffer.getWritePointer(0), channelData, bufferSize, b_downSamp);
-            //processBlockByType(FX, channelData, bufferSize, s_lpfOut2);
+            processBlockByType(FX, channelData, bufferSize, s_lpfOut2);
             //processBlockByType(FX, channelData, bufferSize, s_outGain);
         }
 
         else { //NO OVERSAMPLING:           
             //processBlockByType(FX, channelData, bufferSize, s_inputGain);
-            //processBlockByType(FX, channelData, bufferSize, s_lpf1);
+            processBlockByType(FX, channelData, bufferSize, s_lpf1);
             //non-lin
             for (unsigned int i = s_freeStart; i < s_freeEnd; i++) {
                 if (FX->blockType[i] != b_none)
                     processBlockByType(FX, channelData, bufferSize, i);
             }
-            //processBlockByType(FX, channelData, bufferSize, s_lpfOut2);
+            processBlockByType(FX, channelData, bufferSize, s_lpfOut2);
             //processBlockByType(FX, channelData, bufferSize, s_outGain);
-        }
-        
+        }        
     }
 
     void setBlockType(nonLinFX* fx, unsigned int block, enum blockTypes type) {
