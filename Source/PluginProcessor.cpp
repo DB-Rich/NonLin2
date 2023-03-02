@@ -932,11 +932,11 @@ void NonLinAudioProcessor::parameterChanged(const juce::String& parameterID, flo
         auto oversampleMult = mults[comboValue];
         nonLin[0].oversampleAmt = oversampleMult;
         nonLin[1].oversampleAmt = oversampleMult;
-        for (unsigned int i = s_upSample; i <= s_downSamp; i++) {
+        for (unsigned int i = s_lpf2; i <= s_lpfOut1; i++) {  //s_upSample  s_downSamp
             nonLin[0].oversampleMult[i] = oversampleMult;
             nonLin[1].oversampleMult[i] = oversampleMult;
         }
-        for (unsigned int i = s_lpf2; i <= s_free11; i++) { // was s_free4
+        for (unsigned int i = s_lpf2; i <= s_lpfOut1 ; i++) { // was s_free4 s_free11
             nonLin[0].procSpec[i].sampleRate = getSampleRate() * oversampleMult;
             nonLin[0].procSpec[i].numChannels = 1;
             nonLin[0].procSpec[i].maximumBlockSize = 4096 * oversampleMult;
