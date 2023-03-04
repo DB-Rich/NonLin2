@@ -67,15 +67,22 @@ public:
     int oscCounter = 0;
     int startOfWave = 0;
     int fifoCounter = 0;
-    int waveLengthSamps = 0;
+    float waveLengthSamps = 0;
     bool cycleReady = false;
+    float captureBuffer[8192]{0.f};
+    int captureIdx = 0;
+    int captureEndPoint = 0;
+    bool captureStart = false;
+    bool transferCapture = false;
 
 private:
     //==============================================================================
 
     juce::AudioProcessorValueTreeState parameters;
 
-    //std::atomic<float>* p_sourceX = nullptr;
+    std::atomic<float>* p_mode = nullptr;
+    std::atomic<float>* p_freq = nullptr;
+    
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (NonLinAudioProcessor)
 };

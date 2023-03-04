@@ -23,7 +23,7 @@ public:
         stopTimer();
     };
 
-    void setDataPtr(float* data, bool * visTrigger, int * waveLengthSamps) {
+    void setDataPtr(float* data, bool * visTrigger, float * waveLengthSamps) {
         _data = data;
         _visTrigger = visTrigger;
         _waveLengthSamps = waveLengthSamps;
@@ -49,33 +49,33 @@ public:
 
     void drawFrame(juce::Graphics& g) {
 
-        int waveSize = *_waveLengthSamps;
+        auto height = getLocalBounds().getHeight() * 0.5f;
+        float waveStretch = ((float)scopeSize - 1.f)  / (float)*_waveLengthSamps ;
+        auto width = (float)getLocalBounds().getWidth() * waveStretch;
 
-        for (int i = 1; i < scopeSize; ++i)
-        {
-            auto width = getLocalBounds().getWidth();
-            auto height = getLocalBounds().getHeight() * 0.5f;
+        for (int i = 1; i < scopeSize; ++i) {
 
             //g.drawLine({ (float)juce::jmap(i - 1, 0, scopeSize - 1, 0, width),
             //                      juce::jmap(scopeData[i - 1], 0.0f, 1.0f, (float)height, 0.0f),
             //              (float)juce::jmap(i,     0, scopeSize - 1, 0, width),
             //                      juce::jmap(scopeData[i],     0.0f, 1.0f, (float)height, 0.0f) });
-            g.drawLine({ (float)juce::jmap(i - 1, 0, scopeSize - 1, 0, width),
-                      juce::jmap(_data[i - 1], 0.0f, 1.0f, (float)height, 0.0f),
-              (float)juce::jmap(i,     0, scopeSize - 1, 0, width),
-                      juce::jmap(_data[i],     0.0f, 1.0f, (float)height, 0.0f) });
+
+            g.drawLine({ (float)juce::jmap<float>(i - 1, 0.f, (float)scopeSize - 1, 0, width),      //x1
+                      juce::jmap<float>(_data[i - 1], 0.0f, 1.0f, (float)height, 0.0f),    //y1
+              (float)juce::jmap<float>(i,     0, (float)scopeSize - 1, 0, width),                 //x2
+                      juce::jmap<float>(_data[i],     0.0f, 1.0f, (float)height, 0.0f) }); //y2
         }
     }
 
-    enum {
-        scopeSize = 200,
-        fifoSize = 441
-    };
+    //enum {
+    //    scopeSize = 200
+    //};
 
 private:
+    static constexpr int scopeSize = 200;
     float* _data{ nullptr };
     bool* _visTrigger{ nullptr };
-    int* _waveLengthSamps{ nullptr };
+    float* _waveLengthSamps{ nullptr };
 };
 
 
@@ -176,6 +176,10 @@ private:
 
     juce::ComboBox mode;
     std::unique_ptr<ComboBoxAttachment> modeattachment;
+
+   // juce::TextEditor sineFreq;
+    juce::Slider sineFreq;
+    std::unique_ptr<SliderAttachment> sineFreqattachment;
 
     juce::ComboBox option1;
     juce::ComboBox option2;

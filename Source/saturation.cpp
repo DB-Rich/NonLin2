@@ -524,8 +524,8 @@
             break;
 
             case blockTypes::b_gain: { // { gainPos, gainNeg }
-                auto gainA = param1 * 10.0f;
-                auto gainB = param2 * 10.0f;
+                auto gainA = param1 * 25.0f;
+                auto gainB = param2 * 25.0f;
                 
                 for (unsigned int i = 0; i < bufferSize; i++) {
                     if (channelData[i] > 0.0f) {
@@ -544,7 +544,7 @@
             break;
 
             case blockTypes::b_dcOffset: { // { offset, compensate_sw }
-                auto offset = param1 * 0.5f; // todo make param [0.01, 1.0]
+                auto offset = param1 * 0.5f;
                 auto makeUp = 1.0f / (1.0f - offset); //  std::sqrtf(offset));
                 for (unsigned int i = 0; i < bufferSize; i++) {
                     float in = channelData[i]; 
@@ -571,9 +571,9 @@
         if (FX->oversampleAmt > 1.0f)  {
             const auto oversampBufferSize = (unsigned int)((float)bufferSize * FX->oversampleAmt);
             //processBlockByType(FX, channelData, bufferSize, s_inputGain); // DEBUG - this causes silence - not needed anyway?
-            processBlockByType(FX, channelData, bufferSize, s_lpf1);
+            //processBlockByType(FX, channelData, bufferSize, s_lpf1);
             processBlockUpDown(FX, channelData, FX->upSampBuffer.getWritePointer(0), bufferSize, b_upSamp);
-            processBlockByType(FX, FX->upSampBuffer.getWritePointer(0), oversampBufferSize, s_lpf2);
+            //processBlockByType(FX, FX->upSampBuffer.getWritePointer(0), oversampBufferSize, s_lpf2); //DEBUG - issue with too low freq
 
             //non-lin sequence
             for (unsigned int i = s_freeStart; i < s_freeEnd; i++) {
@@ -582,21 +582,21 @@
                     processBlockByType(FX, FX->upSampBuffer.getWritePointer(0), oversampBufferSize, i);
             }
             //downsample processing
-            processBlockByType(FX, FX->upSampBuffer.getWritePointer(0), oversampBufferSize, s_lpfOut1);
+            //processBlockByType(FX, FX->upSampBuffer.getWritePointer(0), oversampBufferSize, s_lpfOut1); //DEBUG - issue with too low freq
             processBlockUpDown(FX, FX->upSampBuffer.getWritePointer(0), channelData, bufferSize, b_downSamp);
-            processBlockByType(FX, channelData, bufferSize, s_lpfOut2);
+            //processBlockByType(FX, channelData, bufferSize, s_lpfOut2);
             //processBlockByType(FX, channelData, bufferSize, s_outGain);
         }
 
         else { //NO OVERSAMPLING:           
             //processBlockByType(FX, channelData, bufferSize, s_inputGain);
-            processBlockByType(FX, channelData, bufferSize, s_lpf1);
+            //processBlockByType(FX, channelData, bufferSize, s_lpf1);
             //non-lin
             for (unsigned int i = s_freeStart; i < s_freeEnd; i++) {
                 if (FX->blockType[i] != b_none)
                     processBlockByType(FX, channelData, bufferSize, i);
             }
-            processBlockByType(FX, channelData, bufferSize, s_lpfOut2);
+            //processBlockByType(FX, channelData, bufferSize, s_lpfOut2);
             //processBlockByType(FX, channelData, bufferSize, s_outGain);
         }        
     }

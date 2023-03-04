@@ -62,10 +62,26 @@ NonLinAudioProcessorEditor::NonLinAudioProcessorEditor (NonLinAudioProcessor& p,
     slot7attachment.reset(new ComboBoxAttachment(valueTreeState, "slot7", slot7));
     slot8attachment.reset(new ComboBoxAttachment(valueTreeState, "slot8", slot8));
 
-    const juce::StringArray modes("Play", "Capture", "Analyse");  
+    const juce::StringArray modes("Sine", "Play", "Capture");  
     mode.addItemList(modes, 1);
+    mode.setSize(65, 25);
     addAndMakeVisible(&mode);
     slot8attachment.reset(new ComboBoxAttachment(valueTreeState, "mode", mode));
+
+    sineFreq.setSize(80, 30);
+    addAndMakeVisible(&sineFreq);
+    sineFreq.setSliderStyle(juce::Slider::LinearHorizontal);
+    sineFreq.setTextBoxStyle(textBoxBelow1);
+    sineFreqattachment.reset(new SliderAttachment(valueTreeState, "sinefreq", sineFreq));
+
+    //sineFreq.setText("250.0");
+    //sineFreq.setInputRestrictions(11, "0123456789.");
+    //sineFreq.onReturnKey = [this]() {
+    //    auto val = sineFreq.getTextValue();
+    //    auto thing = val.getValue();
+    //    //auti mm = thing.
+    //    thing = thing;
+    //};
 
     addAndMakeVisible(&UI1);
     addAndMakeVisible(&UI2);
@@ -825,9 +841,11 @@ void NonLinAudioProcessorEditor::resized()
     option7.setBounds(col3, row7 + 15, wid, height);
     option8.setBounds(col3, row8 + 15, wid, height);
 
-    oversample.setBounds(5, 15, wid, height);
+    mode.setBounds(5, 15, wid, 25);
+    oversample.setBounds(5, 45, wid, 25);
+    sineFreq.setBounds(5, 75, wid, 25);
 
     waveViewer.setBounds(100, 5, 200, 100);
 
-    mode.setBounds(300, 5, 70, 30);
+    
 }

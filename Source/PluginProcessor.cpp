@@ -73,6 +73,8 @@ NonLinAudioProcessor::NonLinAudioProcessor()
 
     std::make_unique<juce::AudioParameterInt>("oversample", "oversample", 1, 4, 1),
     std::make_unique<juce::AudioParameterInt>("mode", "mode", 1, 3, 1),
+    std::make_unique<juce::AudioParameterFloat>("sinefreq", "sinefreq", 100.f, 3000.0f, 250.f),
+    
 
     std::make_unique<juce::AudioParameterFloat>("U1AP1", "U1AP1", -100.f, 100.0f, 0.f),
     std::make_unique<juce::AudioParameterFloat>("U1AP2", "U1AP2", -100.f, 100.0f, 0.f),
@@ -182,6 +184,7 @@ NonLinAudioProcessor::NonLinAudioProcessor()
 
     parameters.addParameterListener("oversample", this);
     parameters.addParameterListener("mode", this);
+    parameters.addParameterListener("sinefreq", this);
 
     parameters.addParameterListener("option1", this);
     parameters.addParameterListener("option2", this);
@@ -262,7 +265,10 @@ NonLinAudioProcessor::NonLinAudioProcessor()
     parameters.addParameterListener("U3HP1", this);
     parameters.addParameterListener("U3HP2", this);
     parameters.addParameterListener("U4HP1", this);
-    parameters.addParameterListener("U4HP2", this);  
+    parameters.addParameterListener("U4HP2", this); 
+
+    p_mode = parameters.getRawParameterValue("mode");
+    p_freq = parameters.getRawParameterValue("sinefreq"); 
 }
 
 
@@ -384,47 +390,83 @@ void NonLinAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce:
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, bufferSize);
 
-    //generate sine
-    auto freq = 250.0f;
-    auto sampleRate = (float)getSampleRate();
-    waveLengthSamps = (int)(sampleRate / freq);
-    auto* channelDataL = buffer.getWritePointer(0);
-    auto* channelDataR = buffer.getWritePointer(1);
-    for (int i = 0; i < bufferSize; i++) {
-        auto wave = 0.5f * sinf(juce::MathConstants<float>::twoPi * oscCounter / waveLengthSamps);
-        channelDataL[i] = wave;
-        channelDataR[i] = wave;
-        oscCounter++;
-        if (oscCounter == waveLengthSamps) {
-            if (!visTrigger && !cycleReady) {
-                cycleReady = true; //trigger start of cycle capture
-                startOfWave = i;
-            }   
-            oscCounter = 0;
+    //generate test sine
+    if (*p_mode == 1) {       
+        auto sampleRate = (float)getSampleRate();
+        waveLengthSamps = sampleRate / *p_freq;
+        auto* channelDataL = buffer.getWritePointer(0);
+        auto* channelDataR = buffer.getWritePointer(1);
+        for (int i = 0; i < bufferSize; i++) {
+            auto wave = 0.5f * sinf(juce::MathConstants<float>::twoPi * (float)oscCounter / waveLengthSamps);
+            channelDataL[i] = wave;
+            channelDataR[i] = wave;
+            oscCounter++;
+            if (oscCounter >= waveLengthSamps) { //debug need -1 ?
+                if (!visTrigger && !cycleReady) {
+                    cycleReady = true; //trigger start of cycle capture
+                    startOfWave = i;
+                }
+                oscCounter = 0;
+            }
         }
     }
 
+    //capture left audio
+    else if (*p_mode == 3) {
+        auto* channelData = buffer.getReadPointer(0);
+        for (int i = 0; i < bufferSize; i++) {
+            captureBuffer[captureIdx] = channelData[i];
+            auto prev = captureIdx - 1;
+            if (prev == -1) prev = 8191;
+            if (captureBuffer[captureIdx] >= 0.f && captureBuffer[prev] < 0.f) { //zero crossing
+                if (captureStart == true && transferCapture == false) {
+                    captureEndPoint = captureIdx;
+                    captureStart = false;
+                    transferCapture = true;
+                    break;
+                }
+                captureStart = true;
+            }
+            captureIdx++;
+            if (captureIdx > 8191) {
+                captureIdx = 0;
+            }
+        }
+    }
+    
+
+    //nonlin processing on audio block:
     for (int channel = 0; channel < totalNumInputChannels; ++channel)  {
         auto* channelData = buffer.getWritePointer (channel);
-        //nonlin processing on audio block:
         processSaturation(&nonLin[channel], channelData, bufferSize);
     }
 
     //store wave from start of waveform, trigger visualisation when done:
-    auto* channelDataX = buffer.getReadPointer(0);    
-    if (cycleReady)  {
-        for (int i = startOfWave; i < bufferSize; i++) {
-            visData[fifoCounter] = channelDataX[i];
-            fifoCounter++;
-            if (fifoCounter == waveLengthSamps) {
-                fifoCounter = 0;
-                visTrigger = true;
-                cycleReady = false;
-                break;
+    if (*p_mode == 1) {
+        auto* channelDataX = buffer.getReadPointer(0);
+        if (cycleReady) {
+            for (int i = startOfWave; i < bufferSize; i++) {
+                visData[fifoCounter] = channelDataX[i];
+                fifoCounter++;
+                if (fifoCounter >= waveLengthSamps) {
+                    fifoCounter = 0;
+                    visTrigger = true;
+                    cycleReady = false;
+                    break;
+                }
             }
+            startOfWave = 0;
         }
-        startOfWave = 0;
-    }  
+    }
+    else if (*p_mode == 3 && transferCapture) {
+        for (int i = 0; i < captureEndPoint; i++) {
+            visData[i] = captureBuffer[i];
+        }
+        waveLengthSamps = captureEndPoint;
+        visTrigger = true;
+        transferCapture = false;
+        fifoCounter = 0; //to prevent error when going back to mode 1 - will it work? nope!
+    }
 
 }
 
