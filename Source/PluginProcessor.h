@@ -62,7 +62,7 @@ public:
     void parameterChanged(const juce::String& parameterID, float newValue) override; //from Listener class
 
     nonLinFX nonLin[2];
-    float visData[512];
+    float visData[8192];
     bool visTrigger{ false };
     int oscCounter = 0;
     int startOfWave = 0;
@@ -74,6 +74,7 @@ public:
     int captureEndPoint = 0;
     bool captureStart = false;
     bool transferCapture = false;
+    float previousSamp = 0.f;
 
 private:
     //==============================================================================

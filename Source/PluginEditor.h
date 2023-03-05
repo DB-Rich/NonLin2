@@ -43,14 +43,13 @@ public:
     {
         if (*_visTrigger ) {
             repaint();
-            *_visTrigger = false;
         }
     }
 
     void drawFrame(juce::Graphics& g) {
 
         auto height = getLocalBounds().getHeight() * 0.5f;
-        float waveStretch = ((float)scopeSize - 1.f)  / (float)*_waveLengthSamps ;
+        float waveStretch = ((float)scopeSize - 1.f)  / *_waveLengthSamps ;
         auto width = (float)getLocalBounds().getWidth() * waveStretch;
 
         for (int i = 1; i < scopeSize; ++i) {
@@ -61,15 +60,12 @@ public:
             //                      juce::jmap(scopeData[i],     0.0f, 1.0f, (float)height, 0.0f) });
 
             g.drawLine({ (float)juce::jmap<float>(i - 1, 0.f, (float)scopeSize - 1, 0, width),      //x1
-                      juce::jmap<float>(_data[i - 1], 0.0f, 1.0f, (float)height, 0.0f),    //y1
+                      juce::jmap<float>(_data[i - 1], 0.0f, 1.0f, height, 0.0f),    //y1
               (float)juce::jmap<float>(i,     0, (float)scopeSize - 1, 0, width),                 //x2
-                      juce::jmap<float>(_data[i],     0.0f, 1.0f, (float)height, 0.0f) }); //y2
+                      juce::jmap<float>(_data[i],     0.0f, 1.0f, height, 0.0f) }); //y2
         }
+        *_visTrigger = false;
     }
-
-    //enum {
-    //    scopeSize = 200
-    //};
 
 private:
     static constexpr int scopeSize = 200;

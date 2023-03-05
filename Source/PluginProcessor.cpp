@@ -344,6 +344,7 @@ void NonLinAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock
 {
     initSaturation(&nonLin[0], sampleRate, samplesPerBlock);
     initSaturation(&nonLin[1], sampleRate, samplesPerBlock);
+    memset(captureBuffer, 0.f, 8192);
     // Use this method as the place to do any pre-playback
     // initialisation that you need..
 }
@@ -415,22 +416,25 @@ void NonLinAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce:
     else if (*p_mode == 3) {
         auto* channelData = buffer.getReadPointer(0);
         for (int i = 0; i < bufferSize; i++) {
-            captureBuffer[captureIdx] = channelData[i];
-            auto prev = captureIdx - 1;
-            if (prev == -1) prev = 8191;
-            if (captureBuffer[captureIdx] >= 0.f && captureBuffer[prev] < 0.f) { //zero crossing
-                if (captureStart == true && transferCapture == false) {
-                    captureEndPoint = captureIdx;
-                    captureStart = false;
-                    transferCapture = true;
-                    break;
-                }
-                captureStart = true;
-            }
-            captureIdx++;
-            if (captureIdx > 8191) {
+            if (channelData[i] >= 0.f && previousSamp < 0.f && !transferCapture) {  //zero crossing
+                captureEndPoint = captureIdx;
+                waveLengthSamps = captureEndPoint - 1;
                 captureIdx = 0;
+                if (!visTrigger) transferCapture = true;               
             }
+            if (!transferCapture) {
+                captureBuffer[captureIdx] = channelData[i];
+                captureIdx++;
+                if (captureIdx > 8191) captureIdx = 0; //safety - needed?
+            }
+            else {
+                for (int j = 0; j < captureEndPoint; j++) {
+                    visData[j] = captureBuffer[j];
+                }
+                transferCapture = false;
+                visTrigger = true;
+            }              
+            previousSamp = channelData[i];
         }
     }
     
@@ -458,15 +462,17 @@ void NonLinAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce:
             startOfWave = 0;
         }
     }
-    else if (*p_mode == 3 && transferCapture) {
-        for (int i = 0; i < captureEndPoint; i++) {
-            visData[i] = captureBuffer[i];
-        }
-        waveLengthSamps = captureEndPoint;
-        visTrigger = true;
-        transferCapture = false;
-        fifoCounter = 0; //to prevent error when going back to mode 1 - will it work? nope!
-    }
+    //else if (*p_mode == 3 && transferCapture) {
+    //    if (!visTrigger) {
+    //        for (int i = 0; i < captureEndPoint; i++) {
+    //            visData[i] = captureBuffer[i];
+    //        }
+    //        waveLengthSamps = captureEndPoint;
+    //        visTrigger = true;
+    //        transferCapture = false;
+    //        fifoCounter = 0; //to prevent error when going back to mode 1 - will it work? nope!
+    //    }
+    //}
 
 }
 
