@@ -62,17 +62,14 @@ struct nonLinFX {
     float uiValue[NUM_PANEL_KNOBS]{ 0.f };
     float matrixFinalAmounts[TOTAL_ASSIGNMEMTS][2]{ 0.0f }; // final values
     float matrixRange[TOTAL_ASSIGNMEMTS][NUM_PANEL_KNOBS][2]{ 0.0f }; // min range per assignment
-    //float matrixSkew[TOTAL_ASSIGNMEMTS][2]{ 0.0f }; // log skew per assignment
-
+    //float matrixSkew[TOTAL_ASSIGNMEMTS][2]{ 0.0f }; // log skew per assignment - todo
     unsigned int option[TOTAL_ASSIGNMEMTS]{ 0 };
-
     float oversampleMult[TOTAL_ASSIGNMEMTS]{ 1.0f };
     enum blockTypes blockType[TOTAL_ASSIGNMEMTS]{ blockTypes::b_none };
     float oversampleAmt = 1.0f;
     float prevBlockSample = 0.0f;
     std::array<juce::dsp::FirstOrderTPTFilter<float>, TOTAL_ASSIGNMEMTS> filter; // up to 16 filters, and associated spec's
     std::array<juce::dsp::ProcessSpec, TOTAL_ASSIGNMEMTS> procSpec;
-   // std::array<float, 4096 * 8> upSampBuffer;   //todo - make dynamic  ?
     juce::AudioBuffer<float> upSampBuffer;
 }; 
 

@@ -74,15 +74,6 @@ NonLinAudioProcessorEditor::NonLinAudioProcessorEditor (NonLinAudioProcessor& p,
     sineFreq.setTextBoxStyle(textBoxBelow1);
     sineFreqattachment.reset(new SliderAttachment(valueTreeState, "sinefreq", sineFreq));
 
-    //sineFreq.setText("250.0");
-    //sineFreq.setInputRestrictions(11, "0123456789.");
-    //sineFreq.onReturnKey = [this]() {
-    //    auto val = sineFreq.getTextValue();
-    //    auto thing = val.getValue();
-    //    //auti mm = thing.
-    //    thing = thing;
-    //};
-
     addAndMakeVisible(&UI1);
     addAndMakeVisible(&UI2);
     addAndMakeVisible(&UI3);

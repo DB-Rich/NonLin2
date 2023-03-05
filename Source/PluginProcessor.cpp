@@ -60,8 +60,6 @@ NonLinAudioProcessor::NonLinAudioProcessor()
     std::make_unique<juce::AudioParameterFloat>("ui3", "UI3", 0.f, 100.0f, 50.f),
     std::make_unique<juce::AudioParameterFloat>("ui4", "UI4", 0.f, 100.0f, 50.f),
 
-
-
     std::make_unique<juce::AudioParameterInt>("option1", "option 1", 1, 4, 1),
     std::make_unique<juce::AudioParameterInt>("option2", "option 2", 1, 4, 1),
     std::make_unique<juce::AudioParameterInt>("option3", "option 3", 1, 4, 1),
@@ -412,20 +410,32 @@ void NonLinAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce:
         }
     }
 
-    //capture left audio
+    //capture left audio at zero crossing
     else if (*p_mode == 3) {
         auto* channelData = buffer.getReadPointer(0);
         for (int i = 0; i < bufferSize; i++) {
-            if (channelData[i] >= 0.f && previousSamp < 0.f && !transferCapture) {  //zero crossing
-                captureEndPoint = captureIdx;
-                waveLengthSamps = captureEndPoint - 1;
-                captureIdx = 0;
-                if (!visTrigger) transferCapture = true;               
+            
+            if (channelData[i] >= 0.f && previousSamp < 0.f) {
+                auto diff = channelData[i] - previousSamp;
+                if (!transferCapture) {
+                    captureEndPoint = captureIdx;
+                    waveLengthSamps = (float)(captureEndPoint)-1.f;        
+                    endRemainder = 0.f;
+                    if (diff != 0.0f) endRemainder = channelData[i] / diff;
+                    *p_freq = (float)getSampleRate() / (waveLengthSamps + endRemainder - startRemainder);
+                    captureIdx = 0;
+                    if (!visTrigger) transferCapture = true;
+                }
+                if (visTrigger) {
+                    if (diff != 0.0f) startRemainder = channelData[i] / diff;
+                    else startRemainder = 0.f;
+                }
             }
+
             if (!transferCapture) {
                 captureBuffer[captureIdx] = channelData[i];
                 captureIdx++;
-                if (captureIdx > 8191) captureIdx = 0; //safety - needed?
+                if (captureIdx > 8191) captureIdx = 0; //safety
             }
             else {
                 for (int j = 0; j < captureEndPoint; j++) {
@@ -462,17 +472,6 @@ void NonLinAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce:
             startOfWave = 0;
         }
     }
-    //else if (*p_mode == 3 && transferCapture) {
-    //    if (!visTrigger) {
-    //        for (int i = 0; i < captureEndPoint; i++) {
-    //            visData[i] = captureBuffer[i];
-    //        }
-    //        waveLengthSamps = captureEndPoint;
-    //        visTrigger = true;
-    //        transferCapture = false;
-    //        fifoCounter = 0; //to prevent error when going back to mode 1 - will it work? nope!
-    //    }
-    //}
 
 }
 
@@ -583,8 +582,6 @@ void NonLinAudioProcessor::parameterChanged(const juce::String& parameterID, flo
         setBlockType(&nonLin[0], s_free11, (blockTypes)comboValue);
         setBlockType(&nonLin[1], s_free11, (blockTypes)comboValue);
     }
-
-
 
     else if (parameterID == "ui1") {
         nonLin[0].uiValue[0] = normValue;
@@ -994,7 +991,6 @@ void NonLinAudioProcessor::parameterChanged(const juce::String& parameterID, flo
             nonLin[0].filter[i].prepare(nonLin[0].procSpec[i]);
             nonLin[1].filter[i].prepare(nonLin[1].procSpec[i]);
         }
-        //TODO - add pre and post filters to this DEBUG
     }
 
     else if (parameterID == "option1") {

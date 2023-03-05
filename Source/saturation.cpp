@@ -560,9 +560,7 @@
                 }
             }
             break;
-        }
-
-        
+        } // end of switch(type)
     }
 
     // PUBLIC::

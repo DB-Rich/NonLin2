@@ -1,20 +1,9 @@
-/*
-  ==============================================================================
-
-    This file contains the basic framework code for a JUCE plugin processor.
-
-  ==============================================================================
-*/
 
 #pragma once
 
 #include <JuceHeader.h>
-
 #include "saturation.h"
 
-//==============================================================================
-/**
-*/
 class NonLinAudioProcessor  : public juce::AudioProcessor
                             , private juce::AudioProcessorValueTreeState::Listener
                             #if JucePlugin_Enable_ARA
@@ -75,15 +64,15 @@ public:
     bool captureStart = false;
     bool transferCapture = false;
     float previousSamp = 0.f;
+    float startRemainder = 0.f;
+    float endRemainder = 0.f;
 
 private:
-    //==============================================================================
 
     juce::AudioProcessorValueTreeState parameters;
 
     std::atomic<float>* p_mode = nullptr;
     std::atomic<float>* p_freq = nullptr;
     
-
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (NonLinAudioProcessor)
 };
