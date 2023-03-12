@@ -71,8 +71,10 @@ NonLinAudioProcessor::NonLinAudioProcessor()
 
     std::make_unique<juce::AudioParameterInt>("oversample", "oversample", 1, 4, 1),
     std::make_unique<juce::AudioParameterInt>("mode", "mode", 1, 3, 1),
+    std::make_unique<juce::AudioParameterInt>("viewselect", "viewselect", 1, 3, 1),  
     std::make_unique<juce::AudioParameterFloat>("sinefreq", "sinefreq", 100.f, 3000.0f, 250.f),
-    
+
+    std::make_unique<juce::AudioParameterFloat>("genoffset", "genoffset", -90.f, 90.0f, 0.f),
 
     std::make_unique<juce::AudioParameterFloat>("U1AP1", "U1AP1", -100.f, 100.0f, 0.f),
     std::make_unique<juce::AudioParameterFloat>("U1AP2", "U1AP2", -100.f, 100.0f, 0.f),
@@ -183,7 +185,10 @@ NonLinAudioProcessor::NonLinAudioProcessor()
     parameters.addParameterListener("oversample", this);
     parameters.addParameterListener("mode", this);
     parameters.addParameterListener("sinefreq", this);
-
+    parameters.addParameterListener("viewselect", this);
+    parameters.addParameterListener("genoffset", this);
+    
+    
     parameters.addParameterListener("option1", this);
     parameters.addParameterListener("option2", this);
     parameters.addParameterListener("option3", this);
@@ -267,6 +272,9 @@ NonLinAudioProcessor::NonLinAudioProcessor()
 
     p_mode = parameters.getRawParameterValue("mode");
     p_freq = parameters.getRawParameterValue("sinefreq"); 
+    p_viewselect = parameters.getRawParameterValue("viewselect");
+    p_genoffset = parameters.getRawParameterValue("genoffset");
+
 }
 
 
@@ -385,22 +393,23 @@ void NonLinAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce:
     auto totalNumInputChannels  = getTotalNumInputChannels();
     auto totalNumOutputChannels = getTotalNumOutputChannels();
     auto bufferSize = buffer.getNumSamples();
+    auto sampleRate = (float)getSampleRate();
+    auto* channelCaptureL = buffer.getWritePointer(0);
+    auto* channelSineGenR = buffer.getWritePointer(1);
 
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, bufferSize);
 
-    //generate test sine
-    if (*p_mode == 1) {       
-        auto sampleRate = (float)getSampleRate();
-        waveLengthSamps = sampleRate / *p_freq;
-        auto* channelDataL = buffer.getWritePointer(0);
-        auto* channelDataR = buffer.getWritePointer(1);
+    auto genoffset = *p_genoffset * 0.005f;
+
+    //generate test sine (fill right channel only)
+    if (*p_mode == 1 || *p_mode == 2) {
+        waveLengthSamps = sampleRate / *p_freq;       
         for (int i = 0; i < bufferSize; i++) {
-            auto wave = 0.5f * sinf(juce::MathConstants<float>::twoPi * (float)oscCounter / waveLengthSamps);
-            channelDataL[i] = wave;
-            channelDataR[i] = wave;
+            auto wave = 0.5f * sinf(genoffset + juce::MathConstants<float>::twoPi * (float)oscCounter / waveLengthSamps);
+            channelSineGenR[i] = wave;
             oscCounter++;
-            if (oscCounter >= waveLengthSamps) { //debug need -1 ?
+            if (oscCounter >= (int)waveLengthSamps) {
                 if (!visTrigger && !cycleReady) {
                     cycleReady = true; //trigger start of cycle capture
                     startOfWave = i;
@@ -411,57 +420,47 @@ void NonLinAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce:
     }
 
     //capture left audio at zero crossing
-    else if (*p_mode == 3) {
-        auto* channelData = buffer.getReadPointer(0);
-        for (int i = 0; i < bufferSize; i++) {
-            
-            if (channelData[i] >= 0.f && previousSamp < 0.f) {
-            //zero crossing pitch detection:
-                diff = channelData[i] - previousSamp;
+    else if (*p_mode == 3) {        
+        for (int i = 0; i < bufferSize; i++) {         
+            if (channelCaptureL[i] >= 0.f && previousSamp < 0.f) { //zero crossing pitch detection:         
                 startRemainder = endRemainder;
-                endRemainder = channelData[i] / diff;
+                endRemainder = channelCaptureL[i] / (channelCaptureL[i] - previousSamp);
                 waveLengthSamps = (float)(captureIdx);
                 *p_freq = (float)getSampleRate() / (waveLengthSamps - endRemainder + startRemainder);
                 captureEndPoint = captureIdx;
                 captureIdx = 0;
-                dubugData = *p_freq;
                 if (!transferCapture && !visTrigger) {
                     transferCapture = true;
                 }
             }
 
             if (!transferCapture) {
-                captureBuffer[captureIdx] = channelData[i];
+                captureBuffer[captureIdx] = channelCaptureL[i];
             }
-            else {
+            else { //transfer to visualisation buffer, and  trigger vis
                 for (int j = 0; j < captureEndPoint; j++) {
                     visData[j] = captureBuffer[j];
                 }
                 transferCapture = false;
                 visTrigger = true;
             }              
-            previousSamp = channelData[i];
+            previousSamp = channelCaptureL[i];
             captureIdx++;
         }
-    }
-    
+    }   
 
-    //nonlin processing on audio block:
-    for (int channel = 0; channel < totalNumInputChannels; ++channel)  {
-        auto* channelData = buffer.getWritePointer (channel);
-        processSaturation(&nonLin[channel], channelData, bufferSize);
-    }
+    processSaturation(&nonLin[1], channelSineGenR, bufferSize);
 
     //store wave from start of waveform, trigger visualisation when done:
-    if (*p_mode == 1) {
-        auto* channelDataX = buffer.getReadPointer(0);
+    if (*p_mode == 1 || *p_mode == 2) {
         if (cycleReady) {
             for (int i = startOfWave; i < bufferSize; i++) {
-                visData[fifoCounter] = channelDataX[i];
+                if (*p_mode == 1) visData[fifoCounter] = channelSineGenR[i];
+                else genData[fifoCounter] = channelSineGenR[i];
                 fifoCounter++;
-                if (fifoCounter >= waveLengthSamps) {
+                if (fifoCounter >= (int)waveLengthSamps) {
                     fifoCounter = 0;
-                    visTrigger = true;
+                    if (*p_mode == 1) visTrigger = true;
                     cycleReady = false;
                     break;
                 }
@@ -469,6 +468,87 @@ void NonLinAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce:
             startOfWave = 0;
         }
     }
+
+    auto difference = 0.f;
+  //waveform viewer selection:
+    auto viewChosen = (int)*p_viewselect - 1;
+    switch (viewChosen) {
+    case 0:
+        for (int j = 0; j < captureEndPoint; j++) {
+            visData[j] = genData[j];
+        }
+        visTrigger = true;
+        break;
+    case 1:
+        for (int j = 0; j < captureEndPoint; j++) {
+            visData[j] = captureBuffer[j];
+        }
+        visTrigger = true;
+        break;
+    case 2:
+        for (int j = 0; j < captureEndPoint; j++) {
+            visData[j] = captureBuffer[j] - genData[j];
+            difference += fabsf(visData[j]);
+        }
+        visTrigger = true;
+        break;
+    default:
+        break;
+    }
+    dubugData = difference;
+
+    if (startSineSync) { //move up, if worse, move down, find best
+        //how to adjust actual controls Param1 and offset here?
+        
+        if (testOffset) {
+            if (adjustParam > 0.f && bestDifference > difference) {
+                adjustParam = -0.0001f;
+            }
+            else if (adjustParam < 0.f && bestDifference < difference) {
+                adjustParam = 0.0001f;
+                testOffset = false;
+                testGain = true;
+                //somehow set real control here !! ?
+            }
+            *p_genoffset = *p_genoffset + adjustParam; //adjust offset for best fit
+            bestDifference = difference;
+        }
+        if (testGain) {
+            if (adjustParam > 0.f && bestDifference > difference) {
+                adjustParam = -0.0001f;
+            }
+            else if (adjustParam < 0.f && bestDifference < difference) {
+                adjustParam = 0.0001f;
+                testGain = false;
+            }
+            //how to adjust gain here ?
+           // *p_genoffset = *p_genoffset + adjustParam; //adjust offset for best fit
+            bestDifference = difference;
+        }
+
+
+    }
+
+    //do stuff with audio
+    for (int i = 0; i < bufferSize; i++) {
+        switch (viewChosen) {
+        case 0: 
+            break;
+        case 1:
+
+            break;
+        case 2:
+        {
+            auto sum = channelSineGenR[i] - channelCaptureL[i];
+            channelSineGenR[i] = sum;
+            channelCaptureL[i] = sum;
+        }
+            break;
+        default:
+            break;
+        }
+    }
+
 
 }
 

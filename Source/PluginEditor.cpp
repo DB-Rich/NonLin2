@@ -62,9 +62,9 @@ NonLinAudioProcessorEditor::NonLinAudioProcessorEditor (NonLinAudioProcessor& p,
     slot7attachment.reset(new ComboBoxAttachment(valueTreeState, "slot7", slot7));
     slot8attachment.reset(new ComboBoxAttachment(valueTreeState, "slot8", slot8));
 
-    const juce::StringArray modes("Sine", "Play", "Capture");  
+    const juce::StringArray modes("Sine", "Analyse", "Capture");  
     mode.addItemList(modes, 1);
-    mode.setSize(65, 25);
+    mode.setSize(80, 25);
     addAndMakeVisible(&mode);
     slot8attachment.reset(new ComboBoxAttachment(valueTreeState, "mode", mode));
 
@@ -73,6 +73,22 @@ NonLinAudioProcessorEditor::NonLinAudioProcessorEditor (NonLinAudioProcessor& p,
     sineFreq.setSliderStyle(juce::Slider::LinearHorizontal);
     sineFreq.setTextBoxStyle(textBoxBelow1);
     sineFreqattachment.reset(new SliderAttachment(valueTreeState, "sinefreq", sineFreq));
+    sineFreq.setVisible(false);
+
+    const juce::StringArray view("Gen'd", "Capt'd", "Diff");
+    viewSelect.addItemList(view, 1);
+    viewSelect.setSize(80, 25);
+    addAndMakeVisible(&viewSelect);
+    viewSelectattachment.reset(new ComboBoxAttachment(valueTreeState, "viewselect", viewSelect));
+
+    addAndMakeVisible(&setSineSync);
+    setSineSync.setButtonText("SineSync");
+    setSineSync.onClick = [&]() {
+        p.startSineSync = true;
+        p.testOffset = true;
+    };
+    
+//-----------------------------------------------------------------------------------
 
     addAndMakeVisible(&UI1);
     addAndMakeVisible(&UI2);
@@ -100,10 +116,12 @@ NonLinAudioProcessorEditor::NonLinAudioProcessorEditor (NonLinAudioProcessor& p,
     addAndMakeVisible(&paramA2);
     paramA1.setSize(widgetSize, widgetSize);
     paramA1.setSliderStyle(juce::Slider::RotaryVerticalDrag);
-    paramA1.setTextBoxStyle(noTextBox); // textBoxBelow1
+    paramA1.setTextBoxStyle(textBoxBelow1); // textBoxBelow1
     paramA2.setSize(widgetSize, widgetSize);
     paramA2.setSliderStyle(juce::Slider::RotaryVerticalDrag);
-    paramA2.setTextBoxStyle(noTextBox);
+    paramA2.setTextBoxStyle(textBoxBelow1);
+
+    //paramA1.setRange(0.0f, 100.0f, 0.001f); //does not seem to work?
 
     addAndMakeVisible(&paramB1);
     addAndMakeVisible(&paramB2);
@@ -668,6 +686,12 @@ NonLinAudioProcessorEditor::NonLinAudioProcessorEditor (NonLinAudioProcessor& p,
    addAndMakeVisible(&debugViewer);
    debugViewer.setSize(200, 100);
    debugViewer.setDataPtr(&p.dubugData);
+
+   addAndMakeVisible(&genOffset);
+   genOffset.setSize(widgetSize, widgetSize);
+   genOffset.setSliderStyle(juce::Slider::RotaryVerticalDrag);
+   genOffset.setTextBoxStyle(noTextBox); // textBoxBelow1
+   genOffsetattachment.reset(new SliderAttachment(valueTreeState, "genoffset", genOffset));
    
 
 }
@@ -837,12 +861,15 @@ void NonLinAudioProcessorEditor::resized()
     option7.setBounds(col3, row7 + 15, wid, height);
     option8.setBounds(col3, row8 + 15, wid, height);
 
-    mode.setBounds(5, 15, wid, 25);
-    oversample.setBounds(5, 45, wid, 25);
-    sineFreq.setBounds(5, 75, wid, 25);
+    mode.setBounds(5, 15, 80, 25);
+    oversample.setBounds(5, 45, 80, 25);
+    sineFreq.setBounds(5, 75, 80, 25);
+    viewSelect.setBounds(5, 75, 80, 25);
+
+    setSineSync.setBounds(5, 100, 80, 25);
 
     waveViewer.setBounds(100, 5, 200, 100);
-
+    genOffset.setBounds(300, 5, wid, height);
     debugViewer.setBounds(200, 500, 200, 100);
 
     

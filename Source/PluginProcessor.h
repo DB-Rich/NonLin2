@@ -51,14 +51,16 @@ public:
     void parameterChanged(const juce::String& parameterID, float newValue) override; //from Listener class
 
     nonLinFX nonLin[2];
-    float visData[8192];
+    float captureBuffer[8192]{ 0.f };
+    float visData[8192]{ 0.f };
+    float genData[8192]{ 0.f };
+
     bool visTrigger{ false };
     int oscCounter = 0;
     int startOfWave = 0;
     int fifoCounter = 0;
     float waveLengthSamps = 0;
     bool cycleReady = false;
-    float captureBuffer[8192]{0.f};
     int captureIdx = 0;
     int captureEndPoint = 0;
     bool captureStart = false;
@@ -66,12 +68,13 @@ public:
     float previousSamp = 0.f;
     float startRemainder = 0.f;
     float endRemainder = 0.f;
-
-    //int debugCount = 0;
-    //float prevDiff = 0.0f;
-    float diff = 0.f;
-
     float dubugData = 0.1f;
+
+    bool startSineSync = false;
+    float adjustParam = 0.0001f;
+    float bestDifference = 10000.f;
+    bool testOffset = false;
+    bool testGain = false;
 
 private:
 
@@ -79,6 +82,8 @@ private:
 
     std::atomic<float>* p_mode = nullptr;
     std::atomic<float>* p_freq = nullptr;
-    
+    std::atomic<float>* p_viewselect = nullptr;
+    std::atomic<float>* p_genoffset = nullptr;
+
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (NonLinAudioProcessor)
 };

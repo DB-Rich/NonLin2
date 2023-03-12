@@ -39,7 +39,7 @@ public:
             //g.setColour(juce::Colour(juce::Colours::black));
             //g.fillRect(bounds);
             g.setColour(juce::Colours::white);
-            auto text = juce::String(*data, 1);
+            auto text = juce::String(*data, 3);
             g.setFont(bounds.getHeight() * 0.3f);
             g.setFont(bounds.getHeight() * 0.5f);
             g.drawFittedText(text,
@@ -238,9 +238,18 @@ private:
     juce::ComboBox mode;
     std::unique_ptr<ComboBoxAttachment> modeattachment;
 
-   // juce::TextEditor sineFreq;
     juce::Slider sineFreq;
     std::unique_ptr<SliderAttachment> sineFreqattachment;
+
+    juce::ComboBox viewSelect;
+    std::unique_ptr<ComboBoxAttachment> viewSelectattachment;
+
+    juce::Slider genOffset;
+    std::unique_ptr<SliderAttachment> genOffsetattachment;
+
+    juce::TextButton setSineSync;
+    std::unique_ptr<ButtonAttachment> setSineSyncattachment;
+
 
     juce::ComboBox option1;
     juce::ComboBox option2;
