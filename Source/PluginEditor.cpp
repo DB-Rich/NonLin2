@@ -665,6 +665,11 @@ NonLinAudioProcessorEditor::NonLinAudioProcessorEditor (NonLinAudioProcessor& p,
    waveViewer.setSize(200, 100);
    waveViewer.setDataPtr(p.visData, &p.visTrigger, &p.waveLengthSamps);
 
+   addAndMakeVisible(&debugViewer);
+   debugViewer.setSize(200, 100);
+   debugViewer.setDataPtr(&p.dubugData);
+   
+
 }
 
 NonLinAudioProcessorEditor::~NonLinAudioProcessorEditor()
@@ -837,6 +842,8 @@ void NonLinAudioProcessorEditor::resized()
     sineFreq.setBounds(5, 75, wid, 25);
 
     waveViewer.setBounds(100, 5, 200, 100);
+
+    debugViewer.setBounds(200, 500, 200, 100);
 
     
 }

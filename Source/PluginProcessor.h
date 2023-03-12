@@ -67,6 +67,12 @@ public:
     float startRemainder = 0.f;
     float endRemainder = 0.f;
 
+    //int debugCount = 0;
+    //float prevDiff = 0.0f;
+    float diff = 0.f;
+
+    float dubugData = 0.1f;
+
 private:
 
     juce::AudioProcessorValueTreeState parameters;

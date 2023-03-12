@@ -11,6 +11,71 @@
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
 
+class DisplayBoxSingle : public juce::Label, public juce::Timer
+
+{
+public:
+    DisplayBoxSingle()
+    {
+        startTimerHz(30);
+    };
+
+    ~DisplayBoxSingle()
+    {
+        stopTimer();
+    };
+
+    void paint(juce::Graphics& g) override {
+#ifdef boundingDebug
+        g.setColour(juce::Colours::red);
+        g.drawRect(getX(), getY(), getWidth(), getHeight());
+        return;
+#endif
+        if (data) {
+            const juce::Rectangle<float> bounds = getLocalBounds().toFloat();
+
+            auto width = bounds.getWidth();
+            auto left = bounds.getX();
+            //g.setColour(juce::Colour(juce::Colours::black));
+            //g.fillRect(bounds);
+            g.setColour(juce::Colours::white);
+            auto text = juce::String(*data, 1);
+            g.setFont(bounds.getHeight() * 0.3f);
+            g.setFont(bounds.getHeight() * 0.5f);
+            g.drawFittedText(text,
+                bounds.withX(left).withWidth(width).reduced(2.0).toNearestInt(),
+                juce::Justification::centred, 1);
+        }
+    };
+
+    void resized() override {
+        backgroundNeedsRepaint = true;
+    }
+
+    void visibilityChanged() override {
+        backgroundNeedsRepaint = true;
+    }
+
+    void setDataPtr(float * dta) {
+        data = dta;
+        repaint();
+    }
+
+private:
+
+    void timerCallback() override {
+        if (backgroundNeedsRepaint || val != *data) {
+            repaint();
+            val = *data;
+            backgroundNeedsRepaint = false;
+        }
+    };
+
+    float * data;
+    bool backgroundNeedsRepaint = false;
+    float val = 0.f;
+};
+
 
 class WaveViewer : public juce::Component
     , private juce::Timer
@@ -340,6 +405,8 @@ private:
     std::unique_ptr<SliderAttachment> U4HP2attachment;
 
     WaveViewer waveViewer;
+
+    DisplayBoxSingle debugViewer;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (NonLinAudioProcessorEditor)
 };

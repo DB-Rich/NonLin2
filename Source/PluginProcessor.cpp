@@ -416,26 +416,22 @@ void NonLinAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce:
         for (int i = 0; i < bufferSize; i++) {
             
             if (channelData[i] >= 0.f && previousSamp < 0.f) {
-                auto diff = channelData[i] - previousSamp;
-                if (!transferCapture) {
-                    captureEndPoint = captureIdx;
-                    waveLengthSamps = (float)(captureEndPoint)-1.f;        
-                    endRemainder = 0.f;
-                    if (diff != 0.0f) endRemainder = channelData[i] / diff;
-                    *p_freq = (float)getSampleRate() / (waveLengthSamps + endRemainder - startRemainder);
-                    captureIdx = 0;
-                    if (!visTrigger) transferCapture = true;
-                }
-                if (visTrigger) {
-                    if (diff != 0.0f) startRemainder = channelData[i] / diff;
-                    else startRemainder = 0.f;
+            //zero crossing pitch detection:
+                diff = channelData[i] - previousSamp;
+                startRemainder = endRemainder;
+                endRemainder = channelData[i] / diff;
+                waveLengthSamps = (float)(captureIdx);
+                *p_freq = (float)getSampleRate() / (waveLengthSamps - endRemainder + startRemainder);
+                captureEndPoint = captureIdx;
+                captureIdx = 0;
+                dubugData = *p_freq;
+                if (!transferCapture && !visTrigger) {
+                    transferCapture = true;
                 }
             }
 
             if (!transferCapture) {
                 captureBuffer[captureIdx] = channelData[i];
-                captureIdx++;
-                if (captureIdx > 8191) captureIdx = 0; //safety
             }
             else {
                 for (int j = 0; j < captureEndPoint; j++) {
@@ -445,6 +441,7 @@ void NonLinAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce:
                 visTrigger = true;
             }              
             previousSamp = channelData[i];
+            captureIdx++;
         }
     }
     
