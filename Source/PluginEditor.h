@@ -11,6 +11,58 @@
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
 
+class SpecialSlider : public juce::Slider, private juce::Timer
+{
+public:
+    SpecialSlider() {
+        startTimerHz(60);
+    };
+    ~SpecialSlider() override{
+        stopTimer();
+    };
+
+    void setPtr(int* _analysisStage, float* _currentResult) {
+        analysisStage = _analysisStage;
+        currentResult = _currentResult;
+    };
+
+private:
+    void timerCallback() override {
+        if (*analysisStage == 1) { //if triggered
+            startValue = getValue();
+            *analysisStage = 2;
+        }
+        if (*analysisStage == 2 || *analysisStage == 3) {
+            if (*currentResult < bestFit) {
+                bestFit = *currentResult;
+            }
+            else if (*currentResult > bestFit) {
+                incDec = -0.01f;
+                if (*analysisStage == 3) {
+                    *analysisStage = 0;
+                    delta = 0.f;
+                    incDec = 0.01f;
+                }            
+                else
+                    *analysisStage = 3;
+            }
+            if (*analysisStage > 0) {
+                delta += incDec;
+                setValue(startValue + delta);
+            }   
+        }
+    };
+
+    float bestFit{ 1000.0f };
+    float * currentResult = nullptr;
+    float incDec{ 0.01f };
+    int * analysisStage = nullptr;
+    float delta = 0.f;
+    float startValue;
+
+};
+
+
 class DisplayBoxSingle : public juce::Label, public juce::Timer
 
 {
@@ -166,7 +218,7 @@ private:
     using ButtonAttachment = juce::AudioProcessorValueTreeState::ButtonAttachment;
     using ComboBoxAttachment = juce::AudioProcessorValueTreeState::ComboBoxAttachment;
 
-    juce::Slider paramA1;
+    SpecialSlider paramA1;
     juce::Slider paramA2;
     std::unique_ptr<SliderAttachment> paramA1attachment;
     std::unique_ptr<SliderAttachment> paramA2attachment;

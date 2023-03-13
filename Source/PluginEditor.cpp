@@ -85,7 +85,7 @@ NonLinAudioProcessorEditor::NonLinAudioProcessorEditor (NonLinAudioProcessor& p,
     setSineSync.setButtonText("SineSync");
     setSineSync.onClick = [&]() {
         p.startSineSync = true;
-        p.testOffset = true;
+        //p.testOffset = true;
     };
     
 //-----------------------------------------------------------------------------------
@@ -120,6 +120,8 @@ NonLinAudioProcessorEditor::NonLinAudioProcessorEditor (NonLinAudioProcessor& p,
     paramA2.setSize(widgetSize, widgetSize);
     paramA2.setSliderStyle(juce::Slider::RotaryVerticalDrag);
     paramA2.setTextBoxStyle(textBoxBelow1);
+
+    paramA1.setPtr(&p.analysisStageA1, &p.currentScore);
 
     //paramA1.setRange(0.0f, 100.0f, 0.001f); //does not seem to work?
 

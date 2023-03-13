@@ -496,37 +496,11 @@ void NonLinAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce:
         break;
     }
     dubugData = difference;
+    currentScore = difference;
 
-    if (startSineSync) { //move up, if worse, move down, find best
-        //how to adjust actual controls Param1 and offset here?
-        
-        if (testOffset) {
-            if (adjustParam > 0.f && bestDifference > difference) {
-                adjustParam = -0.0001f;
-            }
-            else if (adjustParam < 0.f && bestDifference < difference) {
-                adjustParam = 0.0001f;
-                testOffset = false;
-                testGain = true;
-                //somehow set real control here !! ?
-            }
-            *p_genoffset = *p_genoffset + adjustParam; //adjust offset for best fit
-            bestDifference = difference;
-        }
-        if (testGain) {
-            if (adjustParam > 0.f && bestDifference > difference) {
-                adjustParam = -0.0001f;
-            }
-            else if (adjustParam < 0.f && bestDifference < difference) {
-                adjustParam = 0.0001f;
-                testGain = false;
-            }
-            //how to adjust gain here ?
-           // *p_genoffset = *p_genoffset + adjustParam; //adjust offset for best fit
-            bestDifference = difference;
-        }
-
-
+    if (startSineSync && viewChosen == 2) { //move up, if worse, move down, find best
+        analysisStageA1 = 1;
+        startSineSync = false;
     }
 
     //do stuff with audio

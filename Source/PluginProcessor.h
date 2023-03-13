@@ -71,10 +71,13 @@ public:
     float dubugData = 0.1f;
 
     bool startSineSync = false;
-    float adjustParam = 0.0001f;
-    float bestDifference = 10000.f;
-    bool testOffset = false;
-    bool testGain = false;
+    float currentScore = 1000.f;
+    int analysisStageA1 = 0;
+
+    //float adjustParam = 0.0001f;
+    //float bestDifference = 10000.f;
+    //bool testOffset = false;
+    //bool testGain = false;
 
 private:
 
