@@ -85,7 +85,6 @@ NonLinAudioProcessorEditor::NonLinAudioProcessorEditor (NonLinAudioProcessor& p,
     setSineSync.setButtonText("SineSync");
     setSineSync.onClick = [&]() {
         p.startSineSync = true;
-        //p.testOffset = true;
     };
     
 //-----------------------------------------------------------------------------------
@@ -121,7 +120,7 @@ NonLinAudioProcessorEditor::NonLinAudioProcessorEditor (NonLinAudioProcessor& p,
     paramA2.setSliderStyle(juce::Slider::RotaryVerticalDrag);
     paramA2.setTextBoxStyle(textBoxBelow1);
 
-    paramA1.setPtr(&p.analysisStageA1, &p.currentScore);
+    paramA1.setPtr(&p.analysisStage[1], &p.currentScore);
 
     //paramA1.setRange(0.0f, 100.0f, 0.001f); //does not seem to work?
 
@@ -692,8 +691,10 @@ NonLinAudioProcessorEditor::NonLinAudioProcessorEditor (NonLinAudioProcessor& p,
    addAndMakeVisible(&genOffset);
    genOffset.setSize(widgetSize, widgetSize);
    genOffset.setSliderStyle(juce::Slider::RotaryVerticalDrag);
-   genOffset.setTextBoxStyle(noTextBox); // textBoxBelow1
+   genOffset.setTextBoxStyle(textBoxBelow1); // textBoxBelow1
    genOffsetattachment.reset(new SliderAttachment(valueTreeState, "genoffset", genOffset));
+
+   genOffset.setPtr(&p.analysisStage[0], &p.currentScore);
    
 
 }

@@ -31,22 +31,23 @@ private:
         if (*analysisStage == 1) { //if triggered
             startValue = getValue();
             *analysisStage = 2;
+            bestFit = *currentResult; //  1000.f;
         }
         if (*analysisStage == 2 || *analysisStage == 3) {
-            if (*currentResult < bestFit) {
+            if (*currentResult <= bestFit) {
                 bestFit = *currentResult;
             }
             else if (*currentResult > bestFit) {
                 incDec = -0.01f;
                 if (*analysisStage == 3) {
-                    *analysisStage = 0;
+                    *analysisStage = 4;
                     delta = 0.f;
                     incDec = 0.01f;
                 }            
                 else
                     *analysisStage = 3;
             }
-            if (*analysisStage > 0) {
+            if (*analysisStage > 0 && *analysisStage < 4) {
                 delta += incDec;
                 setValue(startValue + delta);
             }   
@@ -296,7 +297,7 @@ private:
     juce::ComboBox viewSelect;
     std::unique_ptr<ComboBoxAttachment> viewSelectattachment;
 
-    juce::Slider genOffset;
+    SpecialSlider genOffset;
     std::unique_ptr<SliderAttachment> genOffsetattachment;
 
     juce::TextButton setSineSync;

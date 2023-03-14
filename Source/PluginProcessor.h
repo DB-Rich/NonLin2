@@ -72,7 +72,8 @@ public:
 
     bool startSineSync = false;
     float currentScore = 1000.f;
-    int analysisStageA1 = 0;
+    int analysisStage[16]{ 0 };
+    int analysisChunk = -1;
 
     //float adjustParam = 0.0001f;
     //float bestDifference = 10000.f;

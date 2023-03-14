@@ -499,8 +499,22 @@ void NonLinAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce:
     currentScore = difference;
 
     if (startSineSync && viewChosen == 2) { //move up, if worse, move down, find best
-        analysisStageA1 = 1;
         startSineSync = false;
+        analysisChunk = 0;      
+        for (int i = 0; i < 16; i++) {
+            analysisStage[i] = 0;
+        }
+    }
+    if (analysisChunk >= 0) {
+        if (analysisStage[analysisChunk] == 0) 
+            analysisStage[analysisChunk] = 1;
+        if (analysisStage[analysisChunk] == 4) {
+            analysisChunk++;
+            if (analysisChunk == 2)
+                analysisChunk = -1;
+            else 
+                analysisStage[analysisChunk] = 1;
+        }
     }
 
     //do stuff with audio
